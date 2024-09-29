@@ -1,0 +1,1 @@
+commande pour tourner le css: npx tailwindcss -i ./src/assets/main.css -o ./src/assets/output.css --watch  
