@@ -15,6 +15,7 @@
                                 (createData.filieres.find((fil) => fil.id == el).code)).join(' - ')
                         }}</span>
                     </p>
+                    <!-- {{ arg.event.title }} -->
                     <p class="text-center"> {{ createData.ecs.find((el) => el.id == arg.event.title).label }} ( /{{
                         createData.ecs.find((el) => el.id == arg.event.title).masse_horaire }}h)</p>
                     <p class="text-center">{{ createData.classes.find((el) => el.id ==
@@ -29,7 +30,7 @@
 
 <script setup>
 import FullCalendar from '@fullcalendar/vue3'
-import { onMounted, ref, useTemplateRef, watch } from 'vue';
+import { onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 import timeGridPlugin from '@fullcalendar/timegrid'
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction'
@@ -39,13 +40,14 @@ import { useTableTimeStore } from '@/stores/timeTableStore';
 import { storeToRefs } from 'pinia';
 import { dateFormatter } from '@/helpers/helper';
 import { useCrudStore } from '@/stores/crudStore';
-import router from '@/router';
+
+
 const emits = defineEmits(['openModal'])
 const tableTimeStore = useTableTimeStore()
 const crudStore = useCrudStore()
 const { createData } = storeToRefs(crudStore);
-const { events, modalIsOpen, event, isUpdateEvent } = storeToRefs(tableTimeStore);
-let refFullCalendar = null
+const { events, modalIsOpen, event, isUpdateEvent, isShowingCalendar, dataToShow } = storeToRefs(tableTimeStore);
+
 const calendarOptions = ref({
     plugins: [timeGridPlugin, interactionPlugin],
     locale: frLocale,
@@ -75,45 +77,50 @@ const calendarOptions = ref({
     },
     dateClick: function (info) {
         // const event = {}
-        const date = dateFormatter((new Date(info.dateStr)).getDate())
-        const month = dateFormatter((new Date(info.dateStr)).getMonth() + 1)
-        const year = (new Date(info.dateStr)).getFullYear()
-        const hour = dateFormatter((new Date(info.dateStr)).getHours())
-        const minute = dateFormatter((new Date(info.dateStr)).getMinutes())
-        const fullDate = `${year}-${month}-${date}`
-        const start = `${hour}:${minute}`
-       
-        event.value.date = fullDate
-        event.value.start = start
+        if (!isShowingCalendar.value) {
+            const date = dateFormatter((new Date(info.dateStr)).getDate())
+            const month = dateFormatter((new Date(info.dateStr)).getMonth() + 1)
+            const year = (new Date(info.dateStr)).getFullYear()
+            const hour = dateFormatter((new Date(info.dateStr)).getHours())
+            const minute = dateFormatter((new Date(info.dateStr)).getMinutes())
+            const fullDate = `${year}-${month}-${date}`
+            const start = `${hour}:${minute}`
 
-        modalIsOpen.value = true
+            event.value.date = fullDate
+            event.value.start = start
+
+            modalIsOpen.value = true
+        }
     },
     events: events.value,
     eventClick: (arg) => {
-        isUpdateEvent.value = true
-        // console.log(events.value.find(event => event.id == arg.event.id))
-        event.value = events.value.find(event => event.id == arg.event.id)
-        // console.log(event.value)
-        const startHour = dateFormatter((new Date(event.value.start)).getHours())
-        const startMinute = dateFormatter((new Date(event.value.start)).getMinutes())
-        const endHour = dateFormatter((new Date(event.value.end)).getHours())
-        const endMinute = dateFormatter((new Date(event.value.end)).getMinutes())
-        const date = dateFormatter((new Date(event.value.start)).getDate())
-        const month = dateFormatter((new Date(event.value.start)).getMonth() + 1)
-        const year = (new Date(event.value.start)).getFullYear()
-        const fullDate = `${year}-${month}-${date}`
-        event.value.date = fullDate
-        event.value.start = `${startHour}:${startMinute}`
-        event.value.end = `${endHour}:${endMinute}`
-        // console.log(event.value)
-        modalIsOpen.value = true;
-        // tableTimeStore.removeEvent(arg.event.id)
+        if (!isShowingCalendar.value) {
+            isUpdateEvent.value = true
+            // console.log(events.value.find(event => event.id == arg.event.id))
+            event.value = events.value.find(event => event.id == arg.event.id)
+            // console.log(event.value)
+            const startHour = dateFormatter((new Date(event.value.start)).getHours())
+            const startMinute = dateFormatter((new Date(event.value.start)).getMinutes())
+            const endHour = dateFormatter((new Date(event.value.end)).getHours())
+            const endMinute = dateFormatter((new Date(event.value.end)).getMinutes())
+            const date = dateFormatter((new Date(event.value.start)).getDate())
+            const month = dateFormatter((new Date(event.value.start)).getMonth() + 1)
+            const year = (new Date(event.value.start)).getFullYear()
+            const fullDate = `${year}-${month}-${date}`
+            event.value.date = fullDate
+            event.value.start = `${startHour}:${startMinute}`
+            event.value.end = `${endHour}:${endMinute}`
+            // console.log(event.value)
+            modalIsOpen.value = true;
+            // tableTimeStore.removeEvent(arg.event.id)
+        }
     }
 
 })
-onMounted(() => {
-    refFullCalendar = useTemplateRef("fullCalendar")
-})
+if (isShowingCalendar.value) {
+    calendarOptions.value.initialDate = dataToShow.value.start
+}
+
 const removeEvent = (arg) => {
     console.log('test')
     console.log(arg.event.id)

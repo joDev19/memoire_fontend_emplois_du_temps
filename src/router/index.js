@@ -34,6 +34,7 @@ import ClasseCreate from '@/views/App/Classroom/Create.vue'
 // Responsable
 import ResponsableMatiere from '@/views/App/Responsable/Matiere.vue'
 import ResponsableUpdateMatiere from '@/views/App/Responsable/UpdateMatiere.vue'
+import ChooseWeek from '@/views/App/DashboardFile/ChooseWeek.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +55,14 @@ const router = createRouter({
       component: Dashboard,
       meta:{
         activePath: 'dashboard',
+      }
+    },
+    {
+      path: '/dashboard/choose-week',
+      name: 'choose-week',
+      component: ChooseWeek,
+      meta: {
+        activePath: 'dashboard'
       }
     },
     {

@@ -52,6 +52,7 @@ onMounted(() => {
         if (response.length > 0)
             data.value.classe_id = response[0].id
     })
+
 })
 const handleSubmit = () => {
     currentStep.value = 'filiere'
