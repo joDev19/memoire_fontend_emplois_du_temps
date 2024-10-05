@@ -41,10 +41,10 @@ export const useCrudStore = defineStore('crudStore', {
                     })
             })
         },
-        store(data, id) {
+        store(data) {
             this.loading = true;
             return new Promise((resolve, reject) => {
-                client.post(`${this.url}/${id}`, data)
+                client.post(`${this.url}`, data)
                     .then((response) => {
                         resolve(response);
                     })
@@ -86,8 +86,15 @@ export const useCrudStore = defineStore('crudStore', {
                     })
             })
         },
-        create(){
-            //
+        create() {
+            this.loading = true
+            return new Promise((resolve, reject) => {
+                client.get(`${this.url}/create`).then(response => { this.createData = response.data; resolve(response.data) }).catch((error) => {
+                    reject(error);
+                })
+            }).finally(() => {
+                this.loading = false;
+            })
         }
     }
 })
