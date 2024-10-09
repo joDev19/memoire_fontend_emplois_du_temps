@@ -9,12 +9,12 @@ const eventFormToEventToDisplayFormatter = (events, event, id = null) => {
         title: event.title,
         start: new Date(start),
         end: new Date(end),
-        backgroundColor: "yellow",
+        backgroundColor: "white",
         prof: event.prof,
         salle: event.salle,
         filieres: event.filieres,
         textColor: "black",
-        // editable: true,
+        editable: true,
     }
     return _event;
 }
@@ -35,6 +35,23 @@ const getFirstDayOfWeek = (date) => {
   
     return currentDate;
 }
+
+const setDateWhenDragOrResize = (info, events)=>{
+    console.log(info.event.id)
+    console.log(info.event.start)
+        // chercher dans le tableau et prendre l'event qui a l'id qu'on veut (1)
+        const tmpEvents = [...events.value];
+        // remplacer les date de fin et de début par la nouvelle date (1)
+        // vider et remplacer le tableau d'events
+        tmpEvents.forEach((ev, i) => {
+            if (ev.id == info.event.id) {
+                tmpEvents[i].start = info.event.start
+                tmpEvents[i].end = info.event.end
+            }
+        });
+        alert(info.event.title + " end is now " + info.event.end);
+    return tmpEvents
+}
 export {
-    dateFormatter, eventFormToEventToDisplayFormatter, getFirstDayOfWeek
+    dateFormatter, eventFormToEventToDisplayFormatter, getFirstDayOfWeek, setDateWhenDragOrResize
 }

@@ -3,6 +3,7 @@
         <template v-slot:eventContent='arg'>
             <div class="flex flex-col gap-3">
                 <div class="flex w-full justify-end h-max-12">
+                    <font-awesome-icon :icon="faCopy" size="lg" class="mr-2" @click.stop.prevent="copyEvent(arg)" />
                     <font-awesome-icon :icon="faXmark" size="lg" class="mr-2" @click="removeEvent(arg)" />
                 </div>
                 <div class="flex flex-col w-full h-full  justify-start items-center overflow-auto">
@@ -33,9 +34,10 @@ import FullCalendar from '@fullcalendar/vue3'
 import { onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 import timeGridPlugin from '@fullcalendar/timegrid'
 import frLocale from '@fullcalendar/core/locales/fr';
+import { eventFormToEventToDisplayFormatter, setDateWhenDragOrResize } from '@/helpers/helper';
 import interactionPlugin from '@fullcalendar/interaction'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useTableTimeStore } from '@/stores/timeTableStore';
 import { storeToRefs } from 'pinia';
 import { dateFormatter } from '@/helpers/helper';
@@ -46,7 +48,7 @@ const emits = defineEmits(['openModal'])
 const tableTimeStore = useTableTimeStore()
 const crudStore = useCrudStore()
 const { createData } = storeToRefs(crudStore);
-const { events, modalIsOpen, event, isUpdateEvent, isShowingCalendar, dataToShow } = storeToRefs(tableTimeStore);
+const { events, modalIsOpen, event, isUpdateEvent, isShowingCalendar, dataToShow, eventInCopy } = storeToRefs(tableTimeStore);
 
 const calendarOptions = ref({
     plugins: [timeGridPlugin, interactionPlugin],
@@ -114,6 +116,29 @@ const calendarOptions = ref({
             modalIsOpen.value = true;
             // tableTimeStore.removeEvent(arg.event.id)
         }
+    },
+    eventResizableFromStart: true,
+    eventDrop: function (info){
+        events.value = setDateWhenDragOrResize(info, events)
+    },
+    eventResize: function (info) {
+        events.value = setDateWhenDragOrResize(info, events)
+        // console.log(info.event.id)
+        // events.value.find(ev => ev.id == info.event.id)
+        // // chercher dans le tableau et prendre l'event qui a l'id qu'on veut (1)
+        // const tmpEvents = events.value;
+        // events.value = []
+        // tmpEvents.forEach((ev, i) => {
+        //     if (ev.id == info.event.id) {
+        //         tmpEvents[i].start = info.event.start
+        //         tmpEvents[i].end = info.event.end
+        //     }
+        // });
+        // events.value = tmpEvents;
+        // // remplacer les date de fin et de début par la nouvelle date (1)
+        // // vider et remplacer le tableau d'events
+
+        // alert(info.event.title + " end is now " + info.event.end);
     }
 
 })
@@ -126,6 +151,14 @@ const removeEvent = (arg) => {
     console.log(arg.event.id)
     tableTimeStore.removeEvent(arg.event.id)
     console.log(events.value)
+}
+const copyEvent = (arg) => {
+    eventInCopy.value = true;
+    console.log(arg.event.id)
+    event.value = { ...events.value.find(ev => ev.id == arg.event.id) }
+    console.log(event.value)
+    // chercher dans le tableau et prendre l'event qui a l'id qu'on veut (1)
+
 }
 
 watch(events, (newEvent) => {

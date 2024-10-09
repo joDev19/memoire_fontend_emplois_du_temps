@@ -1,8 +1,9 @@
 <template>
-    <VueFinalModal @closed="modalIsOpen = false;" class="flex flex-col justify-center items-center"
-        content-class="p-3 rounded-lg w-2/3 bg-white overflow-auto">
+    <VueFinalModal @click-outside="console.log('test')" @closed="closed" @before-open="beforeOpen"
+        class="flex flex-col justify-center items-center" content-class="p-3 rounded-lg w-2/3 bg-white overflow-auto">
         <div class="overflow-auto">
-            <p class="text-sky-600 font-semibold text-lg mb-3"><span v-show="!isUpdateEvent">Créer un cours</span><span v-show="isUpdateEvent">Modifier un cours</span></p>
+            <p class="text-sky-600 font-semibold text-lg mb-3"><span v-show="!isUpdateEvent">Créer un cours</span><span
+                    v-show="isUpdateEvent">Modifier un cours</span></p>
             <template v-if="loading">
                 <div class="flex justify-center items-center my-5">
                     <Loader />
@@ -33,16 +34,20 @@
                             class="lg:border lg:rounded lg:w-full h-10 lg:h-10 lg:p-2 focus:outline-sky-600"
                             v-model="event.title">
                             <!-- <option value="1">Politique de sécurité des systèmes d'information</option> -->
-                            <option v-for="ec in createData.ecs" :key="ec.id" :value="ec.id" >{{ ec.label }}</option>
+                            <option v-for="ec in createData.ecs" :key="ec.id" :value="ec.id">{{ ec.label }}</option>
                         </select>
                     </div>
                     <div class="lg:mb-3">
-                        <label for="label" class="lg:font-semibold lg:block lg:mb-1">Choisissez la filière {{ event }}</label>
+                        <label for="label" class="lg:font-semibold lg:block lg:mb-1">Choisissez la filière {{ event
+                            }}</label>
                         <div class="grid grid-cols-3 gap-3">
                             <div class="flex items-center" v-for="filiere in data.filieres_id" :key="filiere">
-                                <input v-model="event.filieres" :value="filiere" type="checkbox" :id="`filiere-${createData.filieres.find((el)=>el.id==filiere).code}`"
+                                <input v-model="event.filieres" :value="filiere" type="checkbox"
+                                    :id="`filiere-${createData.filieres.find((el) => el.id == filiere).code}`"
                                     class="focus:outline-sky-600">
-                                <label :for="`filiere-${createData.filieres.find((el)=>el.id==filiere).code}`" class="lg:font-semibold ml-3">{{ createData.filieres.find((el)=>el.id==filiere).label }}</label>
+                                <label :for="`filiere-${createData.filieres.find((el) => el.id == filiere).code}`"
+                                    class="lg:font-semibold ml-3">{{
+                                        createData.filieres.find((el) => el.id == filiere).label }}</label>
                             </div>
                             <!-- <div class="flex justify-center items-center">
                                 <input v-model="event.filieres" value="2" type="checkbox" id="SI"
@@ -69,7 +74,8 @@
                         <select id="label"
                             class="lg:border lg:rounded lg:w-full h-10 lg:h-10 lg:p-2 focus:outline-sky-600"
                             v-model="event.salle">
-                            <option  v-for="classe in createData.classes" :key="classe.id" :value="classe.id">{{ classe.label }}</option>
+                            <option v-for="classe in createData.classes" :key="classe.id" :value="classe.id">{{
+                                classe.label }}</option>
                         </select>
                     </div>
                     <div class="lg:mb-3">
@@ -93,9 +99,9 @@
                             v-model="event.end" />
                     </div>
                     <div class="lg:mt-3 lg:h-10 w-1/3 mx-auto lg:bg-sky-600 lg:flex hover:bg-sky-700">
-                        <button v-if="!isUpdateEvent" type="button"  class="lg:w-full lg:text-center text-white"
+                        <button v-if="!isUpdateEvent" type="button" class="lg:w-full lg:text-center text-white"
                             @click="addEvent">Ajouter</button>
-                            <button v-else type="button"  class="lg:w-full lg:text-center text-white"
+                        <button v-else type="button" class="lg:w-full lg:text-center text-white"
                             @click="updateEvent">Modifier</button>
                     </div>
                 </form>
@@ -117,29 +123,67 @@ const crudStore = useCrudStore()
 const { createData, loading } = storeToRefs(crudStore);
 const tableTimeStore = useTableTimeStore()
 
-const { events, modalIsOpen, event, data, isUpdateEvent } = storeToRefs(tableTimeStore);
-
-tableTimeStore.resetEventFiliere();
+const { events, modalIsOpen, event, data, isUpdateEvent, eventInCopy } = storeToRefs(tableTimeStore);
+if (!eventInCopy.value) {
+    tableTimeStore.resetEventFiliere();
+}
 
 const addEvent = () => {
-    tableTimeStore.addEvent(eventFormToEventToDisplayFormatter(events.value, event.value))
-    tableTimeStore.resetEvent();
-    modalIsOpen.value = false;
+    if ((event.value.start < "07:00") || (event.value.start > "19:00") || "07:00" > event.value.end || event.value.end > "19:00") {
+        alert('vérifiez les heures')
+    } else {
+        tableTimeStore.addEvent(eventFormToEventToDisplayFormatter(events.value, event.value))
+        tableTimeStore.resetEvent();
+        modalIsOpen.value = false;
+        if (eventInCopy.value) {
+            eventInCopy.value = false
+        }
+    }
 }
-const updateEvent = ()=>{
-    
-    const tmp_table = events.value
-    tmp_table.forEach((el, i) => {
-        if(el.id == event.value.id){
-            tmp_table[i] = eventFormToEventToDisplayFormatter(events.value, event.value, event.value.id)
+const clickOutside = () => {
+    alert('click outside')
+
+
+}
+const beforeOpen = () => {
+    // alert('before open');
+}
+const closed = () => {
+    if (event.value.date != undefined) {
+        // si l'id du event est dans la tableau events alors je change le format sinon je fais rien.
+        const tmpEvents = [...events.value];
+        console.log(tmpEvents.find(ev => ev.id == event.value.id))
+        tmpEvents.forEach((el, i) => {
+            if (el.id == event.value.id) {
+                //alert(find);
+                tmpEvents[i] = eventFormToEventToDisplayFormatter(events.value, event.value, event.value.id)
+            }
+        })
+        events.value = []
+        events.value = tmpEvents
+        //alert('changer le format')
+        event.value = {};
+    }
+    // alert('oki')
+    modalIsOpen.value = false;
+    if (isUpdateEvent.value == true) {
+        isUpdateEvent.value = false
+    }
+}
+const updateEvent = () => {
+
+    const tmpTable = events.value
+    tmpTable.forEach((el, i) => {
+        if (el.id == event.value.id) {
+            tmpTable[i] = eventFormToEventToDisplayFormatter(events.value, event.value, event.value.id)
         }
     })
     events.value = [];
-    events.value = tmp_table;
+    events.value = tmpTable;
     console.log("mais")
     modalIsOpen.value = false;
     // console.log(event.value.id)
-    // tmp_table.forEach(loop_event => {
+    // tmpTable.forEach(loop_event => {
     //     if(loop_event.id == event.value.id){
     //         console.log("j'ai trouvé")
     //         console.log(loop_event)
@@ -156,10 +200,10 @@ onMounted(() => {
     })
 })
 
-watch(()=>event.value.title, (newEc)=>{
-    if(event.value.title != undefined){
-        const profId = createData.value.ecs.find((el)=>el.id==newEc).professeur_id;
-        event.value.prof = createData.value.professeurs.find((el) =>el.id==profId).name
+watch(() => event.value.title, (newEc) => {
+    if (event.value.title != undefined) {
+        const profId = createData.value.ecs.find((el) => el.id == newEc).professeur_id;
+        event.value.prof = createData.value.professeurs.find((el) => el.id == profId).name
     }
 })
 </script>

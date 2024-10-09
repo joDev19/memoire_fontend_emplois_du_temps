@@ -10,7 +10,8 @@ export const useTableTimeStore = defineStore('tableTime', {
     },
     isUpdateEvent: false,
     isShowingCalendar: false,
-    dataToShow: null
+    dataToShow: null,
+    eventInCopy: false,
   }),
 
   actions: {
