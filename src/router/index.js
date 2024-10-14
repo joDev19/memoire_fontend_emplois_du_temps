@@ -257,8 +257,9 @@ const router = createRouter({
       component: ResponsableMatiere,
     },
     {
-      path: '/responsable/matiere/:id',
+      path: '/responsable/matiere/:ecId',
       name: 'responsable-matiere-update',
+      props: true,
       component: ResponsableUpdateMatiere,
     }
     // {

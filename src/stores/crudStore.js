@@ -28,17 +28,23 @@ export const useCrudStore = defineStore('crudStore', {
         show(id) {
             this.loading = true;
             return new Promise((resolve, reject) => {
-                client.get(`${this.url}/${id}`)
-                    .then((response) => {
-                        this.row = response.data;
-                        resolve(this.row);
-                    })
-                    .catch((error) => {
-                        reject(error);
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    })
+                if (this.rows.find(el => el.id == id)) {
+                    this.row = this.rows.find(el => el.id == id);
+                    resolve(this.row);
+                    this.loading = false
+                }else{
+                    client.get(`${this.url}/${id}`)
+                        .then((response) => {
+                            this.row = response.data;
+                            resolve(this.row);
+                        })
+                        .catch((error) => {
+                            reject(error);
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        })
+                }
             })
         },
         store(data) {
