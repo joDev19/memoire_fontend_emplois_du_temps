@@ -1,8 +1,7 @@
 <template>
     <Layout>
         <div class="p-5">
-            <MiniHeader title="Les configurations" description="Lorem ipsum dolor sit amet consectetur adipisicing
-                    elit. Nulla rerum distinctio..." />
+            <MiniHeader title="Les configurations" description="Configurez les différents aspects de votre application." links="[{label: 'Configuration', link: 'config'}]" />
         
             <div>
                 <!-- recherche -->

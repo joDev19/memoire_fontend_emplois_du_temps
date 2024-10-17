@@ -38,15 +38,16 @@
                         </select>
                     </div>
                     <div class="lg:mb-3">
-                        <label for="label" class="lg:font-semibold lg:block lg:mb-1">Choisissez la filière</label>
+                        <label for="label" class="lg:font-semibold lg:block lg:mb-1">Choisissez la filière {{
+                            events.filieres }}</label>
                         <div class="grid grid-cols-3 gap-3">
                             <div class="flex items-center" v-for="filiere in data.filieres_id" :key="filiere">
                                 <input v-model="event.filieres" :value="filiere" type="checkbox"
                                     :id="`filiere-${createData.filieres.find((el) => el.id == filiere).code}`"
                                     class="focus:outline-sky-600">
-                                <label :for="`filiere-${createData.filieres.find((el) => el.id == filiere).code}`"
+                                <label :for="`filiere-${createData.filieres.find((el) => el.id == filiere)?.code}`"
                                     class="lg:font-semibold ml-3">{{
-                                        createData.filieres.find((el) => el.id == filiere).label }}</label>
+                                        createData.filieres.find((el) => el.id == filiere).label }} {{ filiere }}</label>
                             </div>
                             <!-- <div class="flex justify-center items-center">
                                 <input v-model="event.filieres" value="2" type="checkbox" id="SI"
@@ -132,11 +133,11 @@ const addEvent = () => {
         alert('vérifiez les heures')
     } else {
         tableTimeStore.addEvent(eventFormToEventToDisplayFormatter(events.value, event.value))
-        tableTimeStore.resetEvent();
         modalIsOpen.value = false;
         if (eventInCopy.value) {
             eventInCopy.value = false
         }
+        tableTimeStore.resetEvent();
     }
 }
 const clickOutside = () => {
@@ -203,8 +204,11 @@ watch(() => event.value.title, (newEc) => {
     if (event.value.title != undefined) {
         const profId = createData.value.ecs.find((el) => el.id == newEc).professeur_id;
         event.value.prof = createData.value.professeurs.find((el) => el.id == profId).name
+        event.value.filieres = createData.value.ecs.find((el) => el.id == newEc).filieres.map((e => e.id))
+        console.log(event.value.filieres)
     }
 })
+
 </script>
 
 <style lang="css" scoped></style>

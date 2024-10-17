@@ -10,12 +10,17 @@
                 </template>
                 <template v-else>
                     <div class="grid lg:grid-cols-5 gap-5">
-                        <div v-for="week in weeks" :key="week.id"
-                            class="h-24 border rounded bg-white hover:border-sky-600 hover:cursor-pointer flex justify-around flex-col px-1"
-                            @click="chooseWeek(week.id)">
-                            <p class="text-center">Semaine du <span class="font-semibold">{{ week.start }}</span> au
-                                <span class="font-semibold">{{ week.end }}</span></p>
-                        </div>
+                        <template v-if="weeks.length == 0">
+                            <p>Pas de programmation pour le moment</p>
+                        </template>
+                        <template v-else>
+                            <div v-for="week in weeks" :key="week.id"
+                                class="h-24 border rounded bg-white hover:border-sky-600 hover:cursor-pointer flex justify-around flex-col px-1"
+                                @click="chooseWeek(week.id)">
+                                <p class="text-center">Semaine du <span class="font-semibold">{{ week.start }}</span> au
+                                    <span class="font-semibold">{{ week.end }}</span></p>
+                            </div>
+                        </template>
                     </div>
                 </template>
             </template>
