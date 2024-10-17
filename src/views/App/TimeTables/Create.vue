@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <div class="p-5">
-            <MiniHeader title="Créer un nouvel emplois du temps" description="Programmer des cours pour une semaine de votre choix" /> {{ events }}
+            <MiniHeader title="Créer un nouvel emplois du temps" description="Programmer des cours pour une semaine de votre choix" />
             <div>
                 <template v-if="currentStep == 'classe'">
                     <ChooseClasse />

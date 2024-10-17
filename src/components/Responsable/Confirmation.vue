@@ -19,7 +19,7 @@
                                     <input type="radio" name="year" :id="`year-${year.id}`" v-model="yearId"
                                         class="focus:outline-sky-600" :value="year.id">
                                     <label :for="`year-${year.id}`" class="lg:font-semibold ml-3">{{ year.label
-                                        }} {{ filiereId }}</label>
+                                        }}</label>
                                 </div>
                             </div>
                         </template>
@@ -30,7 +30,7 @@
                                     <input type="radio" name="filiere" :id="`filiere-${filiere.id}`" v-model="filiereId"
                                         class="focus:outline-sky-600" :value="filiere.id">
                                     <label :for="`filiere-${filiere.id}`" class="lg:font-semibold ml-3">{{ filiere.label
-                                        }} {{ filiereId }}</label>
+                                        }}</label>
                                 </div>
                             </div>
                         </template>

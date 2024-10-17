@@ -17,7 +17,7 @@
                         }}</span>
                     </p>
                     <!-- {{ arg.event.title }} -->
-                    <p class="text-center"> {{ createData.ecs.find((el) => el.id == arg.event.title).label }} ( /{{
+                    <p class="text-center"> {{ createData.ecs.find((el) => el.id == arg.event.title).label }} ( {{ createData.ecs.find((el) => el.id == arg.event.title).remaining_hour }}h/{{
                         createData.ecs.find((el) => el.id == arg.event.title).masse_horaire }}h)</p>
                     <p class="text-center">{{ createData.classes.find((el) => el.id ==
                         arg.event.extendedProps.salle).label
@@ -147,23 +147,33 @@ if (isShowingCalendar.value) {
 }
 
 const removeEvent = (arg) => {
-    console.log('test')
-    console.log(arg.event.id)
-    tableTimeStore.removeEvent(arg.event.id)
-    console.log(events.value)
+    if (!isShowingCalendar.value) {
+        console.log('test')
+        console.log(arg.event.id)
+        tableTimeStore.removeEvent(arg.event.id)
+        console.log(events.value)
+
+    }
 }
 const copyEvent = (arg) => {
-    eventInCopy.value = true;
-    console.log(arg.event.id)
-    event.value = { ...events.value.find(ev => ev.id == arg.event.id) }
-    console.log(event.value)
-    // chercher dans le tableau et prendre l'event qui a l'id qu'on veut (1)
+    if (!isShowingCalendar.value) {
+        eventInCopy.value = true;
+        console.log(arg.event.id)
+        event.value = { ...events.value.find(ev => ev.id == arg.event.id) }
+        console.log(event.value)
+        // chercher dans le tableau et prendre l'event qui a l'id qu'on veut (1)
+    }
 
 }
 
 watch(events, (newEvent) => {
     calendarOptions.value.events = newEvent
     console.log("watrcher de event")
+})
+
+onMounted(() => {
+    //récupérer le lundi de la semaine courante
+    // faire une requête pour vérifier s'il y a une semaine de cours qui est avant la semaine de la date actuelle.
 })
 </script>
 

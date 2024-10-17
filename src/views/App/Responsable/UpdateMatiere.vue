@@ -8,7 +8,7 @@
             </div>
             <div class="w-full">
                 <div class="w-full border-r-slate-100 bg-white rounded shadow p-2">
-                    <p class="font-semibold text-lg mt-3 ml-5 mb-5 text-sky-600">Informations générales {{ ec }}</p>
+                    <p class="font-semibold text-lg mt-3 ml-5 mb-5 text-sky-600">Informations générales</p>
                     <template v-if="loading">
                         <div class="flex justify-center items-center my-5">
                             <Loader />
@@ -23,7 +23,7 @@
                             <p class="pl-10">Masse horaire totale :</p>
                             <p>{{ ec?.masse_horaire }}h</p>
                             <p class="pl-10">Masse horaire restante :</p>
-                            <p>-</p>
+                            <p>{{ ec?.remaining_hour }}h</p>
                             <!-- <p class="pl-10">Créer le :</p>
                             <p>02/01/2003</p>
                             <p class="pl-10">Mise à jour le :</p>

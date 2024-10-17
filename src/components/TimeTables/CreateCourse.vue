@@ -38,8 +38,7 @@
                         </select>
                     </div>
                     <div class="lg:mb-3">
-                        <label for="label" class="lg:font-semibold lg:block lg:mb-1">Choisissez la filière {{ event
-                            }}</label>
+                        <label for="label" class="lg:font-semibold lg:block lg:mb-1">Choisissez la filière</label>
                         <div class="grid grid-cols-3 gap-3">
                             <div class="flex items-center" v-for="filiere in data.filieres_id" :key="filiere">
                                 <input v-model="event.filieres" :value="filiere" type="checkbox"
@@ -64,7 +63,7 @@
 
                     <div class="lg:mb-3">
                         <label for="label" class="lg:font-semibold lg:block lg:mb-1">Professeur</label>
-                        input ou select
+                        <!-- input ou selectk -->
                         <input type="text" id="label"
                             class="lg:border lg:rounded lg:w-full h-10 lg:h-10 lg:p-2 focus:outline-sky-600" readonly
                             v-model="event.prof" />
