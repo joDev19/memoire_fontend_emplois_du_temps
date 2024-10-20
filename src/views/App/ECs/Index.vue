@@ -19,6 +19,22 @@
                             <th class="text-center">Filiere</th>
                         </tr>
                     </thead>
+                    <template #filieres="props">
+                        <div class="flex justify-start">
+                            {{props.cellData.map(filiere => {
+                                return filiere.code
+                                // return {
+                                //     // id: filiere.id,
+                                //     code: filiere.code
+                                // }
+                            }).join(' - ')}}
+                        </div>
+                    </template>
+                    <template #ue="props">
+                        <div class="flex justify-start">
+                            {{props.cellData.label}}
+                        </div>
+                    </template>
                     <template #action="props">
 
                         <div class="flex justify-center">
@@ -36,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import router from '@/router';
 import { faPlusCircle, faEye } from '@fortawesome/free-solid-svg-icons';
@@ -45,9 +61,14 @@ import MiniHeader from '@/components/MiniHeader.vue';
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-bm';
 import languageFr from 'datatables.net-plugins/i18n/fr-FR.mjs'
+import { useCrudStore } from '@/stores/crudStore';
 import 'datatables.net-responsive-dt';
+import { storeToRefs } from 'pinia';
+const crudStore = useCrudStore();
 DataTable.use(DataTablesCore);
 // DataTable.use(language);
+const {url, loading, rows: ecs} = storeToRefs(crudStore);
+url.value = "ecs"
 const options = {
     //language: languageFr,
     language: {
@@ -60,15 +81,16 @@ const options = {
         info: 'Affichage de _START_ à _END_ sur _TOTAL_ ECs',
         infoEmpty: 'Affichage de 0 à 0 sur 0 EC',
         lengthMenu: "Afficher _MENU_ ECs",
-        zeroRecords: "Aucune ECs trouvée"
+        zeroRecords: "Aucune ECs trouvée",
+        loading: loading.value,
 
     },
 }
 const columns = ref([
     { data: 'code' },
     { data: 'label' },
-    { data: 'ue' },
-    { data: 'filiere' },
+    { data: 'ue', render: '#ue' },
+    { data: 'filieres', render: '#filieres' },
     {
         data: null,
         render: '#action',
@@ -76,32 +98,16 @@ const columns = ref([
 
     }
 ])
-const data = ref([
-    {
-        'code': '1INF1322',
-        'label': 'Analyse et conception orientée objet',
-        'ue': 'Structures algébriques et Leurs applications en informatique',
-        'filiere': 'SI',
-        'id': 1
-    },
-    {
-        'code': '1INF1322',
-        'label': 'Analyse et conception orientée objet',
-        'ue': 'Structures algébriques et Leurs applications en informatique',
-        'filiere': 'SI',
-        'id': 2
-    },
-    {
-        'code': '1INF1322',
-        'label': 'Analyse et conception orientée objet',
-        'ue': 'Structures algébriques et Leurs applications en informatique',
-        'filiere': 'SI',
-        'id': 3
-    },
-]);
+const data = ref([])
+
 const showEc = (id) => {
     router.push({ name: 'ec-show', params: { id: id } })
 }
+onMounted(() => {
+    crudStore.index().then(() => {
+       data.value = ecs.value
+    })
+})
 
 </script>
 

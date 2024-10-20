@@ -49,6 +49,7 @@ const { modalIsOpen, currentStep, data, events } = storeToRefs(tableTimeStore)
 import { useCrudStore } from '@/stores/crudStore';
 import Matiere from '../Responsable/Matiere.vue';
 import client from '@/axiosClient';
+import { notify } from '@kyvg/vue3-notification';
 const crudStore = useCrudStore()
 const { loading, url, rows } = storeToRefs(crudStore);
 const steps = ref([
@@ -98,7 +99,12 @@ const storeTimeTables = () => {
         weekEndDate: `${lastDayOfTheWeek.getFullYear()}-${dateFormatter(lastDayOfTheWeek.getMonth() + 1)}-${dateFormatter(lastDayOfTheWeek.getDate())}`,
     }
     // console.log(data_to_send)
-    client.post('timetables', data_to_send);
+    client.post('timetables', data_to_send).then((response) => {
+        notify({
+            text: "Enregistré avec succès",
+            type: "success"
+        })
+    })
 
 }
 watch(modalIsOpen, (newModalIsOpen) => {

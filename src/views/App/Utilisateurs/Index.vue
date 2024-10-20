@@ -13,12 +13,15 @@
                     :data="data" :options="options">
                     <thead>
                         <tr>
-                            <th>Nom</th>
+                            <th>name</th>
                             <th>Email</th>
                             <th>Téléphone</th>
                             <th class="text-center">Rôle</th>
                         </tr>
                     </thead>
+                    <template #roles="props">
+                        {{ props.cellData.map(role => role.label).join(', ') }}
+                    </template>
                     <template #action="props">
 
                         <div class="flex justify-center">
@@ -36,16 +39,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import router from '@/router';
 import { faPlusCircle, faEye } from '@fortawesome/free-solid-svg-icons';
 import Layout from '../Layout.vue';
 import MiniHeader from '@/components/MiniHeader.vue';
 import DataTable from 'datatables.net-vue3';
+import { useCrudStore } from '@/stores/crudStore';
 import DataTablesCore from 'datatables.net-bm';
 import languageFr from 'datatables.net-plugins/i18n/fr-FR.mjs'
 import 'datatables.net-responsive-dt';
+import { storeToRefs } from 'pinia';
+const crudStore = useCrudStore()
+const { url, rows: users } = storeToRefs(crudStore)
+url.value = "users"
 DataTable.use(DataTablesCore);
 // DataTable.use(language);
 const options = {
@@ -65,10 +73,10 @@ const options = {
     },
 }
 const columns = ref([
-    { data: 'nom' },
+    { data: 'name' },
     { data: 'email' },
     { data: 'telephone' },
-    { data: 'role' },
+    { data: 'roles', render: '#roles' },
     {
         data: null,
         render: '#action',
@@ -76,33 +84,15 @@ const columns = ref([
 
     }
 ])
-const data = ref([
-    {
-        'nom': 'Dr Ratheil',
-        'email': 'ratheil@gmail.com',
-        'telephone': '+229 66686153',
-        'role': 'Coordinateur',
-        'id': 1
-    },
-    {
-        'nom': 'Jordy GNANIH',
-        'email': 'jordy@gmail.com',
-        'telephone': '+229 66686153',
-        'role': 'Responsable',
-        'id': 2
-    },
-    {
-        'nom': 'Jordy GNANIH',
-        'email': 'jordy@gmail.com',
-        'telephone': '+229 66686153',
-        'role': 'Responsable',
-        'id': 3
-    },
-]);
+const data = ref([]);
 const showEc = (id) => {
     router.push({ name: 'user-show', params: { id: id } })
 }
-
+onMounted(() => {
+    crudStore.index().then(() => {
+        data.value = users.value
+    })
+})
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="css" scoped></style>

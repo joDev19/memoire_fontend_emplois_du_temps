@@ -4,6 +4,7 @@ import './assets/output.css'
 import { createApp } from 'vue'
 import { createVfm } from 'vue-final-modal'
 import 'vue-final-modal/style.css'
+import { Notifications } from '@kyvg/vue3-notification'
 
 
 import { createPinia } from 'pinia'
@@ -16,6 +17,7 @@ const vfm = createVfm()
 
 app.use(createPinia())
 app.use(router)
+app.use(Notifications)
 app.use(vfm)
 
 app.mount('#app')

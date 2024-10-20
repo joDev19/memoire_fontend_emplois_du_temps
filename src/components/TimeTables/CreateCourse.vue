@@ -119,32 +119,102 @@ import { VueFinalModal } from 'vue-final-modal'
 import { useCrudStore } from '@/stores/crudStore';
 import Loader from '../Loader.vue';
 import client from '@/axiosClient';
+import { notify } from '@kyvg/vue3-notification';
 const crudStore = useCrudStore()
 const { createData, loading } = storeToRefs(crudStore);
+import { dateFormatter } from '@/helpers/helper';
 const tableTimeStore = useTableTimeStore()
 
 const { events, modalIsOpen, event, data, isUpdateEvent, eventInCopy } = storeToRefs(tableTimeStore);
 if (!eventInCopy.value) {
     tableTimeStore.resetEventFiliere();
 }
+/**
+* Vérification de conflis
+* @todo prendre le jour, l'heure de début et l'heure de fin concerné et les stocker dans des const.
+* @todo faire une boucle sur le tableau de events dans son état actuel.
+* @todo dans la boucle, vérifier si il y a un cours qui à lieu le même jour et qui commence à une heure inférieur a l'heure de fin de l'ancien cours .
+* @todo si oui, vérifier si les professeurs est le même pour les deux cours. Si oui, il y a conflit
+* @todo sinon, vérifier s'il y a une ou plusieurs filieres de l'un qui se retrouve dans l'autre. Si oui il y a conflit.
+* @todo sinon, vérifier si la salle de classe de l'un est la même pour l'autre. Si oui, il y a conflit.
+* @toso sinon, créer l'event.
+*/
+const checkConflict = () => {
+    const day = event.value.date;
+    const start = event.value.start;
+    const end = event.value.end;
+    const filieres = event.value.filieres
+    const salle = event.value.salle
+    console.log(day, start, end,)
+    let returnValue = false;
+    events.value.forEach(course => {
+        const courseDate = `${course.start.getFullYear()}-${dateFormatter(course.start.getMonth() + 1)}-${dateFormatter(course.start.getDate())}`
+        const courseStart = `${dateFormatter(course.start.getHours())}:${dateFormatter(course.start.getMinutes())}`
+        const courseEnd = `${dateFormatter(course.end.getHours())}:${dateFormatter(course.end.getMinutes())}`
+        console.log(start, courseEnd, Date.parse('01/01/2024 ' + start) < Date.parse('01/01/2024 ' + courseEnd))
 
+        if (courseDate == day && (Date.parse('01/01/2024 ' + start) < Date.parse('01/01/2024 ' + courseEnd))) {
+            // alert('on est dans le cas où il peut y avoir un conflit')
+            notify("verification des conflits")
+            // vérification du professeur
+            console.log(course)
+            if (event.value.prof == course.prof) {
+                // alert('on a un conflit de professeur');
+                notify({
+                    text: "Il y a un conflit d'enseignant",
+                    type: "error"
+                })
+                returnValue = true;
+                return returnValue
+            }
+            // vérification de la filiere
+            filieres.forEach(filiere => {
+                if (course.filieres.includes(filiere)) {
+                    // alert('on a un conflit de filiere')
+                    notify({
+                        text: "Il y a un conflit de filière",
+                        type: "error"
+                    })
+                    returnValue = true;
+                    return returnValue;
+                }
+            });
+            // vérification de la salle de classe
+            if (salle == course.salle) {
+                // alert('on a un conflit de salle')
+                notify({
+                    text: "Il y a un conflit de salle de classe",
+                    type: "error"
+                })
+                returnValue = true;
+                return returnValue
+            }
+        }
+    });
+    return returnValue;
+}
 const addEvent = () => {
     if ((event.value.start < "07:00") || (event.value.start > "19:00") || "07:00" > event.value.end || event.value.end > "19:00") {
-        alert('vérifiez les heures')
+        notify({
+            text: "Veuillez vérifier les horaires",
+            type: "error"
+        })
     } else {
-        tableTimeStore.addEvent(eventFormToEventToDisplayFormatter(events.value, event.value))
-        modalIsOpen.value = false;
-        if (eventInCopy.value) {
-            eventInCopy.value = false
+        if (false == checkConflict()) {
+            tableTimeStore.addEvent(eventFormToEventToDisplayFormatter(events.value, event.value))
+            modalIsOpen.value = false;
+            if (eventInCopy.value) {
+                eventInCopy.value = false
+            }
+            tableTimeStore.resetEvent();
+            notify({
+                text: "Cours ajouté avec succès",
+                type: "success"
+            })
         }
-        tableTimeStore.resetEvent();
     }
 }
-const clickOutside = () => {
-    alert('click outside')
 
-
-}
 const beforeOpen = () => {
     // alert('before open');
 }

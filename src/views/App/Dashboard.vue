@@ -19,6 +19,11 @@ import { storeToRefs } from 'pinia';
 import Layout from './Layout.vue';
 import { useCrudStore } from '@/stores/crudStore';
 import { useShowTableTime } from '@/stores/showTableTime';
+import { notify } from '@kyvg/vue3-notification';
+notify({
+    text: "Content de vous revoir",
+    type: "success"
+})
 import { onMounted } from 'vue';
 import router from '@/router';
 const crudStore = useCrudStore()
