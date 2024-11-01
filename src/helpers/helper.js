@@ -37,8 +37,8 @@ const getFirstDayOfWeek = (date) => {
 }
 
 const setDateWhenDragOrResize = (info, events) => {
-    console.log(info.event.id)
-    console.log(info.event.start)
+    // console.log(info.event.id)
+    // console.log(info.event.start)
     // chercher dans le tableau et prendre l'event qui a l'id qu'on veut (1)
     const tmpEvents = [...events.value];
     // remplacer les date de fin et de début par la nouvelle date (1)

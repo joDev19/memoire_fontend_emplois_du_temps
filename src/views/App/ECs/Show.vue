@@ -17,15 +17,15 @@
                         <p class="font-semibold text-lg mt-3 ml-5 mb-5 text-sky-600">Informations générales</p>
                         <div class="grid grid-cols-2 text-lg">
                             <p class="pl-10">Code :</p>
-                            <p>MTH1321</p>
+                            <p>{{ ec?.code }}</p>
                             <p class="pl-10">Label :</p>
-                            <p>Structures algébriques et Leurs applications en informatique</p>
+                            <p>{{ ec?.label }}</p>
                             <p class="pl-10">Masse horaire totale :</p>
-                            <p>50h</p>
+                            <p>{{ ec?.masse_horaire }}h</p>
                             <p class="pl-10">Masse horaire restante :</p>
-                            <p>25h</p>
+                            <p>{{ ec?.masse_horaire_restante }}h</p>
                             <p class="pl-10">Créer le :</p>
-                            <p>02/01/2003</p>
+                            <p>{{ ec?.created_at }}</p>
                             <p class="pl-10">Mise à jour le :</p>
                             <p>_</p>
                         </div>
@@ -35,13 +35,13 @@
                         <p class="font-semibold text-lg mt-3 ml-5 mb-5 text-sky-600">Informations supplémentaires</p>
                         <div class="grid grid-cols-2 text-lg">
                             <p class="pl-10">Professeur :</p>
-                            <p>Jordy GNANIH</p>
+                            <p>{{ ec?.professeur }}</p>
                             <p class="pl-10">UE :</p>
-                            <p>Aspect avancée des technologies web</p>
-                            <p class="pl-10">Filière :</p>
-                            <p>Génie logiciel</p>
+                            <p>{{ ec?.ue.label }}</p>
+                            <p class="pl-10">Filières :</p>
+                            <p>{{ ec?.filieres.map(filiere => filiere.code).join(', ') }}</p>
                             <p class="pl-10">Semestre :</p>
-                            <p>Semestre 1</p>
+                            <p>{{ ec?.semestre.label }}</p>
                         </div>
                     </div>
                 </template>
@@ -66,7 +66,7 @@ const { loading, row: ec, url } = storeToRefs(crudStore);
 url.value = 'ecs'
 onMounted(() => {
     crudStore.show(props.id)
-    console.log(ec.value)
+    // console.log(ec.value)
 })
 </script>
 

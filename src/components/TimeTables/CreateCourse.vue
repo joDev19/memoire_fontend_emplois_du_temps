@@ -145,19 +145,19 @@ const checkConflict = () => {
     const end = event.value.end;
     const filieres = event.value.filieres
     const salle = event.value.salle
-    console.log(day, start, end,)
+    // console.log(day, start, end,)
     let returnValue = false;
     events.value.forEach(course => {
         const courseDate = `${course.start.getFullYear()}-${dateFormatter(course.start.getMonth() + 1)}-${dateFormatter(course.start.getDate())}`
         const courseStart = `${dateFormatter(course.start.getHours())}:${dateFormatter(course.start.getMinutes())}`
         const courseEnd = `${dateFormatter(course.end.getHours())}:${dateFormatter(course.end.getMinutes())}`
-        console.log(start, courseEnd, Date.parse('01/01/2024 ' + start) < Date.parse('01/01/2024 ' + courseEnd))
+        // console.log(start, courseEnd, Date.parse('01/01/2024 ' + start) < Date.parse('01/01/2024 ' + courseEnd))
 
         if (courseDate == day && (Date.parse('01/01/2024 ' + start) < Date.parse('01/01/2024 ' + courseEnd))) {
             // alert('on est dans le cas où il peut y avoir un conflit')
             notify("verification des conflits")
             // vérification du professeur
-            console.log(course)
+            // console.log(course)
             if (event.value.prof == course.prof) {
                 // alert('on a un conflit de professeur');
                 notify({
@@ -194,7 +194,7 @@ const checkConflict = () => {
     return returnValue;
 }
 const addEvent = () => {
-    if ((event.value.start < "07:00") || (event.value.start > "19:00") || "07:00" > event.value.end || event.value.end > "19:00") {
+    if (event.value.start === undefined || event.value.end === undefined || (event.value.start < "07:00") || (event.value.start > "19:00") || "07:00" > event.value.end || event.value.end > "19:00") {
         notify({
             text: "Veuillez vérifier les horaires",
             type: "error"
@@ -222,7 +222,7 @@ const closed = () => {
     if (event.value.date != undefined) {
         // si l'id du event est dans la tableau events alors je change le format sinon je fais rien.
         const tmpEvents = [...events.value];
-        console.log(tmpEvents.find(ev => ev.id == event.value.id))
+        // console.log(tmpEvents.find(ev => ev.id == event.value.id))
         tmpEvents.forEach((el, i) => {
             if (el.id == event.value.id) {
                 //alert(find);
@@ -250,7 +250,7 @@ const updateEvent = () => {
     })
     events.value = [];
     events.value = tmpTable;
-    console.log("mais")
+    //console.log("mais")
     modalIsOpen.value = false;
     // console.log(event.value.id)
     // tmpTable.forEach(loop_event => {
@@ -275,7 +275,7 @@ watch(() => event.value.title, (newEc) => {
         const profId = createData.value.ecs.find((el) => el.id == newEc).professeur_id;
         event.value.prof = createData.value.professeurs.find((el) => el.id == profId).name
         event.value.filieres = createData.value.ecs.find((el) => el.id == newEc).filieres.map((e => e.id))
-        console.log(event.value.filieres)
+        // console.log(event.value.filieres)
     }
 })
 

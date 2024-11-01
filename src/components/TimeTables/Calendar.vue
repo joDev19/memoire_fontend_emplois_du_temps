@@ -17,8 +17,9 @@
                         }}</span>
                     </p>
                     <!-- {{ arg.event.title }} -->
-                    <p class="text-center"> {{ createData.ecs.find((el) => el.id == arg.event.title).label }} ( {{ createData.ecs.find((el) => el.id == arg.event.title).remaining_hour }}h/{{
-                        createData.ecs.find((el) => el.id == arg.event.title).masse_horaire }}h)</p>
+                    <p class="text-center"> {{ createData.ecs.find((el) => el.id == arg.event.title).label }} ( {{
+                        createData.ecs.find((el) => el.id == arg.event.title).remaining_hour }}h/{{
+                            createData.ecs.find((el) => el.id == arg.event.title).masse_horaire }}h)</p>
                     <p class="text-center">{{ createData.classes.find((el) => el.id ==
                         arg.event.extendedProps.salle).label
                         }}</p>
@@ -48,13 +49,18 @@ const emits = defineEmits(['openModal'])
 const tableTimeStore = useTableTimeStore()
 const crudStore = useCrudStore()
 const { createData } = storeToRefs(crudStore);
-const { events, modalIsOpen, event, isUpdateEvent, isShowingCalendar, dataToShow, eventInCopy } = storeToRefs(tableTimeStore);
+const { events, modalIsOpen, event, isUpdateEvent, isShowingCalendar, dataToShow, eventInCopy, startDateOfTheWeek } = storeToRefs(tableTimeStore);
 
 const calendarOptions = ref({
     plugins: [timeGridPlugin, interactionPlugin],
     locale: frLocale,
     initialView: 'timeGridWeek',
     hiddenDays: [0],
+    headerToolbar: isShowingCalendar.value === false ? {
+        start: 'title', // will normally be on the left. if RTL, will be on the right
+        center: '',
+        end: 'today prev,next' // will normally be on the right. if RTL, will be on the left
+    } : false,
     weekNumberCalculation: 'ISO',
     slotMinTime: "07:00:00",
     slotMaxTime: "20:00:00",
@@ -118,59 +124,46 @@ const calendarOptions = ref({
         }
     },
     eventResizableFromStart: true,
-    eventDrop: function (info){
+    eventDrop: function (info) {
         events.value = setDateWhenDragOrResize(info, events)
     },
     eventResize: function (info) {
         events.value = setDateWhenDragOrResize(info, events)
-        // console.log(info.event.id)
-        // events.value.find(ev => ev.id == info.event.id)
-        // // chercher dans le tableau et prendre l'event qui a l'id qu'on veut (1)
-        // const tmpEvents = events.value;
-        // events.value = []
-        // tmpEvents.forEach((ev, i) => {
-        //     if (ev.id == info.event.id) {
-        //         tmpEvents[i].start = info.event.start
-        //         tmpEvents[i].end = info.event.end
-        //     }
-        // });
-        // events.value = tmpEvents;
-        // // remplacer les date de fin et de début par la nouvelle date (1)
-        // // vider et remplacer le tableau d'events
-
-        // alert(info.event.title + " end is now " + info.event.end);
+    },
+    // viewDidMount: function (arg) {
+    //     console.log(arg.view.activeStart);
+    // },
+    datesSet: function (dateInfo) {
+        startDateOfTheWeek.value = dateInfo.start
     }
 
 })
 if (isShowingCalendar.value) {
     calendarOptions.value.initialDate = dataToShow.value.start
 }
-
 const removeEvent = (arg) => {
     if (!isShowingCalendar.value) {
-        console.log('test')
-        console.log(arg.event.id)
+        // console.log('test')
+        // console.log(arg.event.id)
         tableTimeStore.removeEvent(arg.event.id)
-        console.log(events.value)
+        // console.log(events.value)
 
     }
 }
 const copyEvent = (arg) => {
     if (!isShowingCalendar.value) {
         eventInCopy.value = true;
-        console.log(arg.event.id)
+        // console.log(arg.event.id)
         event.value = { ...events.value.find(ev => ev.id == arg.event.id) }
-        console.log(event.value)
+        // console.log(event.value)
         // chercher dans le tableau et prendre l'event qui a l'id qu'on veut (1)
     }
 
 }
-
 watch(events, (newEvent) => {
     calendarOptions.value.events = newEvent
-    console.log("watrcher de event")
+    // console.log("watrcher de event")
 })
-
 onMounted(() => {
     //récupérer le lundi de la semaine courante
     // faire une requête pour vérifier s'il y a une semaine de cours qui est avant la semaine de la date actuelle.

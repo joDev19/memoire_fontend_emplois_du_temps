@@ -1,7 +1,8 @@
 <template>
     <Layout>
         <div class="p-5">
-            <MiniHeader title="Créer un nouvel emplois du temps" description="Programmer des cours pour une semaine de votre choix" />
+            <MiniHeader title="Créer un nouvel emplois du temps"
+                description="Programmer des cours pour une semaine de votre choix" />
             <div>
                 <template v-if="currentStep == 'classe'">
                     <ChooseClasse />
@@ -14,6 +15,8 @@
                     <div class="flex justify-end gap-3">
                         <button class="btn bg-sky-600 text-white p-2 rounded-lg"
                             @click="currentStep = 'filiere'"><font-awesome-icon :icon="faArrowLeft" /> Précédent
+                        </button>
+                        <button class="btn bg-sky-600 text-white p-2 rounded-lg" @click="handleImport">Importer
                         </button>
                         <button class="btn bg-sky-600 text-white p-2 rounded-lg" @click="modalIsOpen = true">Ajouter
                             un crénaux</button>
@@ -38,20 +41,21 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Calendar from '@/components/TimeTables/Calendar.vue';
 import CreateCourse from '@/components/TimeTables/CreateCourse.vue';
 import { ModalsContainer, useModal } from 'vue-final-modal'
-import { ref, watch } from 'vue';
+import { onUnmounted, ref, watch } from 'vue';
 import ChooseFiliere from '@/components/TimeTables/ChooseFiliere.vue';
 import { useTableTimeStore } from '@/stores/timeTableStore';
 import ChooseClasse from '@/components/TimeTables/ChooseClasse.vue';
 import { storeToRefs } from 'pinia';
 import { dateFormatter, getFirstDayOfWeek } from '@/helpers/helper';
 const tableTimeStore = useTableTimeStore()
-const { modalIsOpen, currentStep, data, events } = storeToRefs(tableTimeStore)
+const { modalIsOpen, currentStep, data, events, startDateOfTheWeek } = storeToRefs(tableTimeStore)
 import { useCrudStore } from '@/stores/crudStore';
 import Matiere from '../Responsable/Matiere.vue';
 import client from '@/axiosClient';
 import { notify } from '@kyvg/vue3-notification';
 const crudStore = useCrudStore()
-const { loading, url, rows } = storeToRefs(crudStore);
+const { loading, url, rows, createData } = storeToRefs(crudStore);
+// const emits = defineEmits(['getDateOfCalendar'])
 const steps = ref([
     {
         title: 'Choix de la classe',
@@ -107,12 +111,41 @@ const storeTimeTables = () => {
     })
 
 }
+const handleImport = () => {
+    loading.value = true
+    client.get(`course/create/year/${data.value.classe_id}`).then((response) => {
+        createData.value = response.data;
+        loading.value = false
+    })
+    // récupérer la date de début de la semaine
+    const date = startDateOfTheWeek.value;
+    // enlever une semaine ( 7 jours ) à cette date
+    date.setDate(date.getDate() - 7);
+    // faire la requete api
+    const _data = `${date.getFullYear()}-${dateFormatter(date.getMonth() + 1)}-${dateFormatter(date.getDate())}`
+    client.post('courses/get-old-courses', {
+        oldDate: _data,
+        yearId: data.value.classe_id
+    }).then(response => {
+        events.value = response.data
+    });
+    // mettre à jour events
+}
 watch(modalIsOpen, (newModalIsOpen) => {
     if (newModalIsOpen == true) {
         open()
     } else {
         close()
     }
+})
+onUnmounted(() => {
+    currentStep.value = 'classe'
+    events.value = []
+    data.value =
+    {
+        filieres_id: [],
+    }
+
 })
 </script>
 

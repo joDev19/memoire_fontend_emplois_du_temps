@@ -13,8 +13,8 @@
             <div class="grid lg:grid-cols-5 gap-5">
 
                 <div class="h-24 border rounded bg-white hover:border-sky-600 hover:cursor-pointer flex justify-around flex-col px-1"
-                    v-for="item in itemsToDisplay" :key="item.id">
-                    <p class="text-center">{{ item.label }} ( {{ item.capacity }} places )</p>
+                    v-for="classe in classes" :key="classe.id">
+                    <p class="text-center">{{ classe.label }}</p>
                 </div>
             </div>
         </div>
@@ -22,23 +22,32 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Layout from '../Layout.vue';
 import { RouterLink } from 'vue-router';
 import MiniHeader from '@/components/MiniHeader.vue';
+import { useCrudStore } from '@/stores/crudStore';
+import { storeToRefs } from 'pinia';
+const crudStore = useCrudStore()
+const {url, rows: classes} = storeToRefs(crudStore)
+url.value = 'classes'
+
 const items = ref([
-    {
-        id: 1,
-        label: "PADTICE",
-        capacity: 60,
-    },
-    {
-        id: 2,
-        label: "IRAN 2",
-        capacity: 150,
-    }
+    // {
+    //     id: 1,
+    //     label: "PADTICE",
+    //     capacity: 60,
+    // },
+    // {
+    //     id: 2,
+    //     label: "IRAN 2",
+    //     capacity: 150,
+    // }
 ])
 const itemsToDisplay = ref([...items.value])
+onMounted(() => {
+    crudStore.index()
+})
 </script>
 
 <style lang="css" scoped></style>

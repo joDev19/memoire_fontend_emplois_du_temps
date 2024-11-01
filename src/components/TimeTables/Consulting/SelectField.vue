@@ -1,11 +1,12 @@
 <template>
     <div class="flex justify-start gap-3 mb-2 h-12">
-        {{ filiere_id }} {{ week_id }} {{ year_id }}
+        <!-- {{ filiere_id }} {{ week_id }} {{ year_id }} -->
         <select name="" v-model="filiere_id" id="">
 
             <option :value="null">Toutes les filieres</option>
             <option v-for="filiere in filieres" :key="filiere.id" :value="filiere.id">{{ filiere.label }}</option>
         </select>
+        <button class="p-2 rounded-lg bg-sky-600 text-white" @click="forward">Partager</button>
     </div>
 </template>
 
@@ -42,6 +43,12 @@ watch(filiere_id, (newFiliereId) => {
         loading.value = false;
     })
 })
+const forward = () => {
+    // console.log(year_id.value, filiere_id.value, week_id.value)
+    client.get(`timetables/forward/year/${year_id.value}/week/${week_id.value}/filiere/${filiere_id.value}`).then((response) => {
+        // console.log(response.data)
+    })
+}
 </script>
 
 <style lang="css" scoped></style>

@@ -14,10 +14,16 @@
                         <tr>
                             <th>Code</th>
                             <th>Label</th>
-                            <th>Filière</th>
+                            <th>Filières</th>
                             <th class="text-center">Semestre</th>
                         </tr>
                     </thead>
+                    <template #filieres="props">
+                        {{ props.rowData.filieres.map(filiere => filiere.code).join(', ') }}
+                    </template>
+                    <template #semestre="props">
+                        {{ props.rowData.semestre.label }}
+                    </template>
                     <template #action="props">
 
                         <div class="flex justify-center">
@@ -35,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import router from '@/router';
 import { faPlusCircle, faEye } from '@fortawesome/free-solid-svg-icons';
@@ -45,6 +51,11 @@ import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-bm';
 import languageFr from 'datatables.net-plugins/i18n/fr-FR.mjs'
 import 'datatables.net-responsive-dt';
+import { useCrudStore } from '@/stores/crudStore';
+import { storeToRefs } from 'pinia';
+const crudStore = useCrudStore()
+const {url, rows: ues, loading} = storeToRefs(crudStore);
+url.value = "/ues"
 DataTable.use(DataTablesCore);
 // DataTable.use(language);
 const options = {
@@ -66,8 +77,8 @@ const options = {
 const columns = ref([
     { data: 'code' },
     { data: 'label' },
-    { data: 'filiere' },
-    { data: 'semestre' },
+    { data: 'filieres', render: '#filieres' },
+    { data: 'semestre', render: '#semestre' },
     {
         data: null,
         render: '#action',
@@ -76,32 +87,37 @@ const columns = ref([
     }
 ])
 const data = ref([
-    {
-        'code': 'MTH1321',
-        'label': 'Structures algébriques et Leurs applications en informatique',
-        'filiere': 'GL',
-        'semestre': 'S1',
-        'id': 1
-    },
-    {
-        'code': 'MTH1321',
-        'label': 'Structures algébriques et Leurs applications en informatique',
-        'filiere': 'GL',
-        'semestre': 'S1',
-        'id': 2
-    },
-    {
-        'code': 'MTH1321',
-        'label': 'Structures algébriques et Leurs applications en informatique',
-        'filiere': 'GL',
-        'semestre': 'S1',
-        'id': 3
-    },
+    // {
+    //     'code': 'MTH1321',
+    //     'label': 'Structures algébriques et Leurs applications en informatique',
+    //     'filiere': 'GL',
+    //     'semestre': 'S1',
+    //     'id': 1
+    // },
+    // {
+    //     'code': 'MTH1321',
+    //     'label': 'Structures algébriques et Leurs applications en informatique',
+    //     'filiere': 'GL',
+    //     'semestre': 'S1',
+    //     'id': 2
+    // },
+    // {
+    //     'code': 'MTH1321',
+    //     'label': 'Structures algébriques et Leurs applications en informatique',
+    //     'filiere': 'GL',
+    //     'semestre': 'S1',
+    //     'id': 3
+    // },
 ]);
 const showUe = (id) => {
     router.push({ name: 'ue-show', params: { id: id } })
 }
+onMounted(() => {
+    crudStore.index().then((responseData) =>{
+        data.value = responseData;
+    })
 
+})
 </script>
 
 <style lang="scss" scoped></style>

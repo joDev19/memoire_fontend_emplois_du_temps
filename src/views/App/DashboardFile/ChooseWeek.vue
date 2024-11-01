@@ -76,7 +76,7 @@ const chooseWeek = (id) => {
 
         dataToShow.value = response.data
         //map 
-        console.log(response.data.courses)
+        // console.log(response.data.courses)
         events.value = response.data.courses
 
 
@@ -84,7 +84,7 @@ const chooseWeek = (id) => {
 
 
     }).catch(error => {
-        console.log(error)
+        // console.log(error)
     }).finally(() => {
         loading.value = false
     })

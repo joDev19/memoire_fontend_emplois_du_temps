@@ -12,6 +12,7 @@ export const useTableTimeStore = defineStore('tableTime', {
     isShowingCalendar: false,
     dataToShow: null,
     eventInCopy: false,
+    startDateOfTheWeek: "",
   }),
 
   actions: {

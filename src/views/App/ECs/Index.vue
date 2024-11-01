@@ -71,6 +71,7 @@ const {url, loading, rows: ecs} = storeToRefs(crudStore);
 url.value = "ecs"
 const options = {
     //language: languageFr,
+    loading: loading,
     language: {
         emptyTable: 'Pas d\'ECs disponible.',
         entries: {

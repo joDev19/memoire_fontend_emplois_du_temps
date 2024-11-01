@@ -15,7 +15,7 @@ export const useCrudStore = defineStore('crudStore', {
                 client.get(this.url)
                     .then((response) => {
                         this.rows = response.data;
-                        console.log(this.rows)
+                        // console.log(this.rows)
                         resolve(this.rows);
                     })
                     .catch((error) => {

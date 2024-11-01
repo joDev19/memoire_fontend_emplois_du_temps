@@ -37,7 +37,7 @@ const chooseYear = (id) => {
 }
 onMounted(()=>{
     crudStore.index().then((data)=>{
-        console.log(data);
+        //console.log(data);
     })
 })
 </script>

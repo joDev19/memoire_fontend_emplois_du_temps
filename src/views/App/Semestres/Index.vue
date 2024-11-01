@@ -11,8 +11,8 @@
             <div class="grid lg:grid-cols-5 gap-5">
 
                 <div class="h-24 border rounded bg-white hover:border-sky-600 hover:cursor-pointer flex justify-around flex-col px-1"
-                    v-for="item in itemsToDisplay" :key="item.code">
-                    <p class="text-center">{{ item.label }} ( {{ item.code }} )</p>
+                    v-for="semestre in semestres" :key="semestre.id">
+                    <p class="text-center">{{ semestre.label }} ( {{ semestre.code }} )</p>
                 </div>
             </div>
         </div>
@@ -21,38 +21,46 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import MiniHeader from '@/components/MiniHeader.vue';
 import Layout from '../Layout.vue';
+import { useCrudStore } from '@/stores/crudStore';
+import { storeToRefs } from 'pinia';
+const crudStore = useCrudStore()
+const {url, rows: semestres} = storeToRefs(crudStore)
+url.value = 'semestres'
 const items = ref([
-    {
-        code: "S1",
-        label: "Semestre 1",
-    },
-    {
-        code: "S2",
-        label: "Semestre 2",
-    },
-    {
-        code: "S3",
-        label: "Semestre 3",
-    },
-    {
-        code: "S4",
-        label: "Semestre 4",
-    },
-    {
-        code: "S5",
-        label: "Semestre 5",
-    },
-    {
-        code: "S6",
-        label: "Semestre 6",
-    },
+    // {
+    //     code: "S1",
+    //     label: "Semestre 1",
+    // },
+    // {
+    //     code: "S2",
+    //     label: "Semestre 2",
+    // },
+    // {
+    //     code: "S3",
+    //     label: "Semestre 3",
+    // },
+    // {Structures algébriques et Leurs applications en informatique
+    //     code: "S4",
+    //     label: "Semestre 4",
+    // },
+    // {
+    //     code: "S5",
+    //     label: "Semestre 5",
+    // },
+    // {
+    //     code: "S6",
+    //     label: "Semestre 6",
+    // },
 ])
 const itemsToDisplay = ref([...items.value]);
+onMounted(() => {
+    crudStore.index()
+})
 </script>
 
 <style lang="scss" scoped></style>
