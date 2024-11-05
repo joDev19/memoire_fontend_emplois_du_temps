@@ -103,7 +103,7 @@ const storeTimeTables = () => {
         weekEndDate: `${lastDayOfTheWeek.getFullYear()}-${dateFormatter(lastDayOfTheWeek.getMonth() + 1)}-${dateFormatter(lastDayOfTheWeek.getDate())}`,
     }
     // console.log(data_to_send)
-    client.post('timetables', data_to_send).then((response) => {
+    client.post('api/timetables', data_to_send).then((response) => {
         notify({
             text: "Enregistré avec succès",
             type: "success"
@@ -113,7 +113,7 @@ const storeTimeTables = () => {
 }
 const handleImport = () => {
     loading.value = true
-    client.get(`course/create/year/${data.value.classe_id}`).then((response) => {
+    client.get(`api/course/create/year/${data.value.classe_id}`).then((response) => {
         createData.value = response.data;
         loading.value = false
     })
@@ -123,7 +123,7 @@ const handleImport = () => {
     date.setDate(date.getDate() - 7);
     // faire la requete api
     const _data = `${date.getFullYear()}-${dateFormatter(date.getMonth() + 1)}-${dateFormatter(date.getDate())}`
-    client.post('courses/get-old-courses', {
+    client.post('apicourses/get-old-courses', {
         oldDate: _data,
         yearId: data.value.classe_id
     }).then(response => {

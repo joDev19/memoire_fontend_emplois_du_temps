@@ -41,7 +41,7 @@ import Loader from '@/components/Loader.vue';
 import { storeToRefs } from 'pinia';
 const crudStore = useCrudStore()
 const { url, rows: filieres, loading } = storeToRefs(crudStore)
-url.value = "filieres"
+url.value = "api/filieres"
 const items = ref([
     {
         code: "GL",

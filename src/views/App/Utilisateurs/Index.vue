@@ -53,7 +53,7 @@ import 'datatables.net-responsive-dt';
 import { storeToRefs } from 'pinia';
 const crudStore = useCrudStore()
 const { url, rows: users } = storeToRefs(crudStore)
-url.value = "users"
+url.value = "api/users"
 DataTable.use(DataTablesCore);
 // DataTable.use(language);
 const options = {

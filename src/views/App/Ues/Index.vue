@@ -4,7 +4,8 @@
             <MiniHeader title="Les Unités d'enseignements" description="Lorem ipsum dolor sit amet consectetur adipisicing
                     elit. Nulla rerum distinctio..." />
             <div class="w-full mb-3 flex justify-end">
-                <button class="bg-sky-600 py-1 px-2 text-white border rounded-lg" @click="router.push({name: 'ue-create'})">Ajouter
+                <button class="bg-sky-600 py-1 px-2 text-white border rounded-lg"
+                    @click="router.push({ name: 'ue-create' })">Ajouter
                     <font-awesome-icon :icon="faPlusCircle" /> </button>
             </div>
             <div class="bg-slate-200 p-2 rounded-xl min-h-96">
@@ -54,8 +55,8 @@ import 'datatables.net-responsive-dt';
 import { useCrudStore } from '@/stores/crudStore';
 import { storeToRefs } from 'pinia';
 const crudStore = useCrudStore()
-const {url, rows: ues, loading} = storeToRefs(crudStore);
-url.value = "/ues"
+const { url, rows: ues, loading } = storeToRefs(crudStore);
+url.value = "api/ues"
 DataTable.use(DataTablesCore);
 // DataTable.use(language);
 const options = {
@@ -113,7 +114,7 @@ const showUe = (id) => {
     router.push({ name: 'ue-show', params: { id: id } })
 }
 onMounted(() => {
-    crudStore.index().then((responseData) =>{
+    crudStore.index().then((responseData) => {
         data.value = responseData;
     })
 

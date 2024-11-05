@@ -30,7 +30,7 @@ import { useCrudStore } from '@/stores/crudStore';
 import { storeToRefs } from 'pinia';
 const crudStore = useCrudStore()
 const {url, rows: classes} = storeToRefs(crudStore)
-url.value = 'classes'
+url.value = 'api/classes'
 
 const items = ref([
     // {

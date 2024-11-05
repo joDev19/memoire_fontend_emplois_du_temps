@@ -68,7 +68,7 @@ const crudStore = useCrudStore();
 DataTable.use(DataTablesCore);
 // DataTable.use(language);
 const {url, loading, rows: ecs} = storeToRefs(crudStore);
-url.value = "ecs"
+url.value = "api/ecs"
 const options = {
     //language: languageFr,
     loading: loading,

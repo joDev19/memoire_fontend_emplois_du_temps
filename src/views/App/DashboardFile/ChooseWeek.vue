@@ -63,7 +63,7 @@ const { week_id, year_id } = storeToRefs(showTableTime)
 const { isShowingCalendar, dataToShow, events } = storeToRefs(tableTimeStore)
 const { url, rows: weeks, loading, createData } = storeToRefs(crudStore)
 
-url.value = 'courseWeeks'
+url.value = 'api/courseWeeks'
 if (!year_id.value)
     router.push({ name: "dashboard" })
 
@@ -96,7 +96,7 @@ onUnmounted(() => {
 onMounted(() => {
     crudStore.index()
     loading.value = true
-    client.get(`course/create/year/${year_id.value}`).then((response) => {
+    client.get(`api/course/create/year/${year_id.value}`).then((response) => {
         createData.value = response.data;
         loading.value = false
     })

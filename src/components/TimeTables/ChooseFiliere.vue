@@ -1,11 +1,16 @@
 <template>
     <form action="" class="bg-white w-2/3 p-2 mx-auto rounded-lg">
-        <p class="text-lg text-sky-600 font-semibold mb-3">Choix des filières</p>
+        <p class="text-lg text-sky-600 font-semibold mb-3">Choix des filières
+        </p>
+        <p class="py-5"><input type="checkbox" id="allChecked" v-model="allIsChecked"> <label for="allChecked">Tout
+                cocher</label></p>
         <div class="grid grid-cols-3 gap-3">
             <div class="flex  items-center" v-for="filiere in filieres" :key="filiere.id">
                 <!-- {{ filiere }} -->
-                <input name="classe" type="checkbox" :id="`filiere-${filiere.id}`" class="focus:outline-sky-600" v-model="data.filieres_id" :value="filiere.id">
-                <label :for="`filiere-${filiere.id}`" class="lg:font-semibold ml-3">{{ filiere.label }} ({{ filiere.code }})</label>
+                <input name="classe" type="checkbox" :id="`filiere-${filiere.id}`" class="focus:outline-sky-600"
+                    v-model="data.filieres_id" :value="filiere.id">
+                <label :for="`filiere-${filiere.id}`" class="lg:font-semibold ml-3">{{ filiere.label }} ({{ filiere.code
+                    }})</label>
             </div>
             <!-- <div class="flex justify-center items-center">
                 <input name="classe" type="checkbox" id="SI" class="focus:outline-sky-600">
@@ -33,15 +38,37 @@ import { storeToRefs } from 'pinia';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useCrudStore } from '@/stores/crudStore';
-import { onMounted } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+const allIsChecked = computed({
+    get() {
+        return data.value.filieres_id.length == 5;
+    },
+    set(newValue) {
+        if (newValue) {
+            data.value.filieres_id = [...filieres.value.map(filiere => filiere.id)]
+        } else {
+            data.value.filieres_id = []
+        }
+    }
+})
+const handleChange = () => {
+    //allIsChecked.value = data.value.filieres_id
+}
 const crudStore = useCrudStore();
 const { loading, url, rows: filieres } = storeToRefs(crudStore);
-url.value = "filieres";
+url.value = "api/filieres";
 const tableTimeStore = useTableTimeStore()
 const { currentStep, data } = storeToRefs(tableTimeStore)
 onMounted(() => {
     crudStore.index();
 })
+// watch(allIsChecked, (newAllIsChecked) => {
+//     if (newAllIsChecked) {
+//         data.value.filieres_id = filieres.value.map(filiere => filiere.id);
+//     } else {
+//         data.value.filieres_id = []
+//     }
+// })
 </script>
 
 <style lang="scss" scoped></style>

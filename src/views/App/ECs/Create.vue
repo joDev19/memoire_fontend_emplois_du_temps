@@ -3,7 +3,6 @@
         <div class="p-5">
             <MiniHeader title="Créer une nouvelle matière   " description="Lorem ipsum dolor sit amet consectetur adipisicing
                     elit. Nulla rerum distinctio..." />
-            {{ data }}
             <div>
 
                 <form action="" class="bg-white w-2/3 p-2 mx-auto rounded-lg">
@@ -82,7 +81,7 @@ const data = ref({})
 data.value.filieres = []
 onMounted(() => {
     loading.value = true;
-    client.get('ecs/create').then((response) => {
+    client.get('apiecs/create').then((response) => {
         createData.value = response.data;
     }).finally(() => {
         loading.value = false;

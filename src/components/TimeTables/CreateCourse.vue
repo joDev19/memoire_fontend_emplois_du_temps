@@ -264,7 +264,7 @@ const updateEvent = () => {
 }
 onMounted(() => {
     loading.value = true
-    client.get(`course/create/year/${data.value.classe_id}`).then((response) => {
+    client.get(`api/course/create/year/${data.value.classe_id}`).then((response) => {
         createData.value = response.data;
         loading.value = false
     })

@@ -4,29 +4,39 @@
             <div class="">
                 <p class="lg:text-xl lg:text-justify">Gérez vos emplois du temps</p>
             </div>
-            <form action="" class="mt-5" @submit="router.push({name: 'dashboard'})">
+            <form action="" class="mt-5" @submit.prevent="handleSubmit">
                 <div class="lg:mb-3 w-2/3 mx-auto">
                     <p class="text-center text-xl mb-2">Type d'utilisateur</p>
                     <div class="flex justify-around">
                         <div>
-                            <input name="typeOfUser" type="radio" id="coordinateur" value="coordinateur" v-model="typeOfUser"> <label for="coordinateur" class="hover:cursor-pointer">Coordinateur</label>
+                            <input name="typeOfUser" type="radio" id="coordinateur" value="coordinateur"
+                                v-model="typeOfUser"> <label for="coordinateur"
+                                class="hover:cursor-pointer">Coordinateur</label>
                         </div>
                         <div>
-                            <input name="typeOfUser" type="radio" id="responsable" value="responsable" v-model="typeOfUser"> <label for="responsable" class="hover:cursor-pointer">Responsable</label>
+                            <input name="typeOfUser" type="radio" id="responsable" value="responsable"
+                                v-model="typeOfUser"> <label for="responsable"
+                                class="hover:cursor-pointer">Responsable</label>
                         </div>
                     </div>
                 </div>
                 <div class="lg:mb-3" v-if="typeOfUser == 'coordinateur'">
                     <label for="email" class="lg:font-semibold lg:block lg:mb-1">Adresse email</label>
-                    <input type="email" id="email" class="lg:border lg:rounded lg:w-full lg:h-10 lg:p-2 focus:outline-sky-600">
+                    <input type="email" id="email"
+                        class="lg:border lg:rounded lg:w-full lg:h-10 lg:p-2 focus:outline-sky-600"
+                        v-model="user.email">
                 </div>
                 <div class="lg:mb-3" v-if="typeOfUser == 'responsable'">
                     <label for="numeroMatricule" class="lg:font-semibold lg:block lg:mb-1">Numéro matricule</label>
-                    <input type="text" id="numeroMatricule" class="lg:border lg:rounded lg:w-full lg:h-10 lg:p-2 focus:outline-sky-600">
+                    <input type="text" id="numeroMatricule"
+                        class="lg:border lg:rounded lg:w-full lg:h-10 lg:p-2 focus:outline-sky-600"
+                        v-model="user.matricule">
                 </div>
                 <div class="lg:mb-3">
                     <label for="password" class="lg:font-semibold lg:block lg:mb-1">Mot de passe</label>
-                    <input type="password" id="password" class="lg:border lg:rounded lg:w-full h-10 lg:h-10 lg:p-2 focus:outline-sky-600">
+                    <input type="password" id="password"
+                        class="lg:border lg:rounded lg:w-full h-10 lg:h-10 lg:p-2 focus:outline-sky-600"
+                        v-model="user.password">
                     <p class="lg:text-sm lg:text-sky-600">Mot de passe oublié</p>
                 </div>
                 <div class="lg:mt-3 lg:h-10 lg:bg-sky-600 lg:flex hover:bg-sky-700">
@@ -39,10 +49,32 @@
 </template>
 
 <script setup>
+import client from "@/axiosClient";
 import router from "@/router";
 import Layout from "@/views/Auth/Layout.vue"
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useUserStore } from "@/stores/utilisateur";
+import { storeToRefs } from "pinia";
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 const typeOfUser = ref("coordinateur")
+const handleSubmit = () => {
+    client.get('sanctum/csrf-cookie').then(() => {
+        client.post('api/login', user.value).then((response) => {
+            // console.log(response.data)
+            user.value = response.data
+            router.push({ name: 'dashboard' })
+        })
+    })
+
+}
+watch(typeOfUser, (newValue) => {
+    if(newValue == "coordinateur"){
+        user.value.matricule = undefined;
+    }else{
+        user.value.email = undefined;
+    }
+})
 </script>
 
 <style lang="css" scoped></style>

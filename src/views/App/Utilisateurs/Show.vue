@@ -85,12 +85,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="i in 3">
+                                        <tr v-for="ec in user?.ecs">
                                             <td class="border p-2">
-                                                MTH1 321
+                                               {{ ec.code }}
                                             </td>
                                             <td class="border p-2">
-                                                Structures algébriques et Leurs applications en informatique
+                                                {{ ec.label }}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -120,7 +120,7 @@ const { profId } = storeToRefs(useAssignEcToProfStore())
 profId.value = props.id
 const crudStore = useCrudStore()
 const { url, row: user, loading } = storeToRefs(crudStore)
-url.value = 'users'
+url.value = 'api/users'
 onMounted(() => {
     crudStore.show(props.id);
 })

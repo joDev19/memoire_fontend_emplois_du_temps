@@ -5,7 +5,7 @@
             <div class="w-full mb-5 flex justify-between">
                 <input type="" class="w-1/3 h-10 rounded focus:outline-sky-600 italic p-1 ml-1"
                     placeholder="Rechercher">
-                <button class="bg-sky-300 py-1 px-2 text-white border rounded-lg hover:cursor-not-allowed">Ajouter
+                <button class="bg-sky-600 py-1 px-2 text-white border rounded-lg" @click="router.push({name: 'semestres-create'})">Ajouter
                     <font-awesome-icon :icon="faPlusCircle" /> </button>
             </div>
             <div class="grid lg:grid-cols-5 gap-5">
@@ -28,9 +28,10 @@ import MiniHeader from '@/components/MiniHeader.vue';
 import Layout from '../Layout.vue';
 import { useCrudStore } from '@/stores/crudStore';
 import { storeToRefs } from 'pinia';
+import router from '@/router';
 const crudStore = useCrudStore()
 const {url, rows: semestres} = storeToRefs(crudStore)
-url.value = 'semestres'
+url.value = 'api/semestres'
 const items = ref([
     // {
     //     code: "S1",

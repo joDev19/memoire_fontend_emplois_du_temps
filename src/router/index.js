@@ -9,6 +9,7 @@ import FiliereCreate from '@/views/App/Filieres/Create.vue'
 import FiliereShow from '@/views/App/Filieres/Show.vue'
 //semestre
 import SemestreIndex from '@/views/App/Semestres/Index.vue'
+import SemestreCreate from '@/views/App/Semestres/Create.vue'
 // ues
 import UesIndex from '@/views/App/Ues/Index.vue'
 import UeShow from '@/views/App/Ues/Show.vue'
@@ -35,7 +36,9 @@ import ClasseCreate from '@/views/App/Classroom/Create.vue'
 import ResponsableMatiere from '@/views/App/Responsable/Matiere.vue'
 import ResponsableUpdateMatiere from '@/views/App/Responsable/UpdateMatiere.vue'
 import ChooseWeek from '@/views/App/DashboardFile/ChooseWeek.vue'
-
+import client from '@/axiosClient'
+// 
+import { useUserStore } from '@/stores/utilisateur'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -104,6 +107,14 @@ const router = createRouter({
       path: '/configs/semestres',
       name: 'semestres-list',
       component: SemestreIndex,
+      meta:{
+        activePath: 'config',
+      }
+    },
+    {
+      path: '/configs/semestres/create',
+      name: 'semestres-create',
+      component: SemestreCreate,
       meta:{
         activePath: 'config',
       }
@@ -272,5 +283,21 @@ const router = createRouter({
     // }
   ]
 })
-
+const isAuthenticated = () => {
+  client.get('api/user').then((response) => {
+    console.log(response.data)
+    useUserStore().user = response.data;
+  })
+}
+router.beforeEach(async (to, from) => {
+  if (
+    // make sure the user is authenticated
+    !isAuthenticated &&
+    // ❗️ Avoid an infinite redirect
+    to.name !== 'Login'
+  ) {
+    // redirect the user to the login page
+    return { name: 'Login' }
+  }
+})
 export default router

@@ -30,7 +30,7 @@ const crudStore = useCrudStore()
 const showTableTimeStore = useShowTableTime()
 const {year_id} = storeToRefs(showTableTimeStore)
 const {url, rows: years} = storeToRefs(crudStore)
-url.value = "years"
+url.value = "api/years"
 const chooseYear = (id) => {
     year_id.value = id
     router.push({name: 'choose-week'})

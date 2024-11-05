@@ -46,7 +46,7 @@ const crudStore = useCrudStore();
 const { loading, url, rows: classes } = storeToRefs(crudStore);
 const tableTimeStore = useTableTimeStore()
 const { currentStep, data } = storeToRefs(tableTimeStore)
-url.value = 'years';
+url.value = 'api/years';
 onMounted(() => {
     crudStore.index().then((response) => {
         if (response.length > 0)

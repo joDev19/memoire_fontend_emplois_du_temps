@@ -1,12 +1,12 @@
 <template class="text-black">
     <FullCalendar ref="fullCalendar" :options="calendarOptions">
         <template v-slot:eventContent='arg'>
-            <div class="flex flex-col gap-3">
+            <div class="flex flex-col gap-3 overflow-x-auto overflow-y-auto">
                 <div class="flex w-full justify-end h-max-12">
                     <font-awesome-icon :icon="faCopy" size="lg" class="mr-2" @click.stop.prevent="copyEvent(arg)" />
                     <font-awesome-icon :icon="faXmark" size="lg" class="mr-2" @click="removeEvent(arg)" />
                 </div>
-                <div class="flex flex-col w-full h-full  justify-start items-center overflow-auto">
+                <div class="flex flex-col w-full h-full  justify-start items-center overflow-x-auto overflow-y-auto">
                     <p class="text-center">
                         {{ dateFormatter((arg.event.start).getHours()) }}h{{
                             dateFormatter((arg.event.start).getMinutes()) }} - {{
@@ -35,6 +35,7 @@ import FullCalendar from '@fullcalendar/vue3'
 import { onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 import timeGridPlugin from '@fullcalendar/timegrid'
 import frLocale from '@fullcalendar/core/locales/fr';
+import { notify } from '@kyvg/vue3-notification';
 import { eventFormToEventToDisplayFormatter, setDateWhenDragOrResize } from '@/helpers/helper';
 import interactionPlugin from '@fullcalendar/interaction'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -157,6 +158,10 @@ const copyEvent = (arg) => {
         event.value = { ...events.value.find(ev => ev.id == arg.event.id) }
         // console.log(event.value)
         // chercher dans le tableau et prendre l'event qui a l'id qu'on veut (1)
+        notify({
+            text: "Copié avec success",
+            type: "success"
+        })
     }
 
 }

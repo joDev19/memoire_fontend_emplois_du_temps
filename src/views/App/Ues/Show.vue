@@ -76,7 +76,7 @@ import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 const crudStore = useCrudStore()
 const { url, row: ue } = storeToRefs(crudStore)
-url.value = "ues"
+url.value = "api/ues"
 const props = defineProps(['id'])
 onMounted(() => {
     crudStore.show(props.id);

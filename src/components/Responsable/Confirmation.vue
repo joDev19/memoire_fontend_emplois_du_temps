@@ -59,11 +59,11 @@ const crudStore = useCrudStore();
 const { url, rows, loading } = storeToRefs(crudStore)
 const responsableStore = useResponsableStore()
 const { modalIsOpen, filiereId, yearId } = storeToRefs(responsableStore)
-url.value = 'years'
+url.value = 'api/years'
 const chooseEc = () => {
     if (step.value == "annee") {
         step.value = "filiere"
-        url.value = "filieres"
+        url.value = "api/filieres"
         crudStore.index().then(() => {
             filiereId.value = rows.value[2].id
         });

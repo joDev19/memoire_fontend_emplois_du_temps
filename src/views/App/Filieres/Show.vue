@@ -75,7 +75,7 @@ import { useCrudStore } from '@/stores/crudStore';
 import { onMounted } from 'vue';
 const crudStore = useCrudStore()
 const { url, row: filiere, loading } = storeToRefs(crudStore)
-url.value = "filieres"
+url.value = "api/filieres"
 const props = defineProps(['id']);
 onMounted(() => {
     crudStore.show(props.id).then((data) => console.log(data))

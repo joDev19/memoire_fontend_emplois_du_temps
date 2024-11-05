@@ -63,7 +63,7 @@ import MiniHeader from '@/components/MiniHeader.vue';
 import { storeToRefs } from 'pinia';
 const props = defineProps(['id'])
 const { loading, row: ec, url } = storeToRefs(crudStore);
-url.value = 'ecs'
+url.value = 'api/ecs'
 onMounted(() => {
     crudStore.show(props.id)
     // console.log(ec.value)

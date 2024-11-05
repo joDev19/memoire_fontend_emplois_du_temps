@@ -29,7 +29,7 @@ import { storeToRefs } from 'pinia';
 import router from '@/router';
 const crudStore = useCrudStore();
 const {url} = storeToRefs(crudStore)
-url.value = "classes"
+url.value = "api/classes"
 import { ref } from 'vue';
 const classe = ref({})
 const handleSubmit = () => {

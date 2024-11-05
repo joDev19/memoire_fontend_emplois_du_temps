@@ -32,7 +32,7 @@ import MiniHeader from '@/components/MiniHeader.vue';
 import { useAssignEcToProfStore } from '@/stores/AssignEcToProfStore';
 const assignEcToProfStore = useAssignEcToProfStore()
 const { profId, ecsId } = storeToRefs(assignEcToProfStore)
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import router from '@/router';
 import { useCrudStore } from '@/stores/crudStore';
@@ -43,7 +43,7 @@ if (profId.value == null) {
     router.push({ name: 'users-list' })
 }
 onMounted(() => {
-    client.get('ecs').then((response) => {
+    client.get('apiecs').then((response) => {
         ecs.value = response.data
         ecsDisplay.value = ecs.value
     })
@@ -53,7 +53,7 @@ const filter = ref({
     name: '',
 })
 const assign = () => {
-    client.post(`ecs/assign-teacher/${profId.value}`, {
+    client.post(`api/ecs/assign-teacher/${profId.value}`, {
         "ecsId": ecsId.value
     }).then(() => {
         rows.value = [];
@@ -75,6 +75,9 @@ watch(() => filter.value.name, (newName) => {
     } else {
         ecsDisplay.value = ecs.value.filter(ec => ec.label.toLowerCase().includes(newName.toLowerCase()));
     }
+})
+onUnmounted(() => {
+    ecsId.value = []
 })
 </script>
 

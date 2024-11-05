@@ -1,8 +1,7 @@
 <template>
     <Layout>
         <div class="p-5">
-            <MiniHeader title="Créer une nouvelle unité d'enseignement" description="Lorem ipsum dolor sit amet consectetur adipisicing
-                    elit. Nulla rerum distinctio..." />
+            <MiniHeader title="Créer une nouvelle unité d'enseignement" description="" />
             <div>
                 <form action="" class="bg-white w-2/3 p-2 mx-auto rounded-lg">
                     <div class="lg:mb-3">

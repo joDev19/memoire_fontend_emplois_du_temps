@@ -81,12 +81,12 @@ const storeEcDone = () => {
         nbr_hour: nbr_hour.value
     }
     // console.log(data)
-   client.post('ec-dones', data).then(()=>{
+   client.post('apiec-dones', data).then(()=>{
     router.push({name: 'responsable-matiere'})
    })
 }
 onMounted(() => {
-    url.value = "ecs"
+    url.value = "api/ecs"
     crudStore.show(props.ecId)
 })
 </script>

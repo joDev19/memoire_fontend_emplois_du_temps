@@ -24,7 +24,7 @@ const { filiere_id, year_id, week_id } = storeToRefs(showTableTime)
 
 const filieres = ref([])
 onMounted(() => {
-    client.get('/filieres').then((response) => {
+    client.get('api/filieres').then((response) => {
         filieres.value = response.data;
     }).catch(() => {
         alert('une erreur s\'est produite')
@@ -32,7 +32,7 @@ onMounted(() => {
 })
 watch(filiere_id, (newFiliereId) => {
     loading.value = true
-    client.get(`/timetables/year/${year_id.value}/week/${week_id.value}`, {
+    client.get(`api/timetables/year/${year_id.value}/week/${week_id.value}`, {
         params: {
             'filiere_id': newFiliereId
         }
@@ -45,7 +45,7 @@ watch(filiere_id, (newFiliereId) => {
 })
 const forward = () => {
     // console.log(year_id.value, filiere_id.value, week_id.value)
-    client.get(`timetables/forward/year/${year_id.value}/week/${week_id.value}/filiere/${filiere_id.value}`).then((response) => {
+    client.get(`api/timetables/forward/year/${year_id.value}/week/${week_id.value}/filiere/${filiere_id.value}`).then((response) => {
         // console.log(response.data)
     })
 }
