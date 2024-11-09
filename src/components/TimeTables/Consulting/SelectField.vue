@@ -6,7 +6,7 @@
             <option :value="null">Toutes les filieres</option>
             <option v-for="filiere in filieres" :key="filiere.id" :value="filiere.id">{{ filiere.label }}</option>
         </select>
-        <button class="p-2 rounded-lg bg-sky-600 text-white" @click="forward">Partager</button>
+        <button class="p-2 rounded-lg bg-sky-600 text-white" @click="forward" v-if="isCoordonateur(user?.roles)">Partager</button>
     </div>
 </template>
 
@@ -21,6 +21,10 @@ import { useCrudStore } from '@/stores/crudStore';
 import { storeToRefs } from 'pinia';
 const showTableTime = useShowTableTime();
 const { filiere_id, year_id, week_id } = storeToRefs(showTableTime)
+import { useUserStore } from '@/stores/utilisateur';
+import { isCoordonateur } from '@/helpers/helper';
+const userStore = useUserStore();
+const {user} = storeToRefs(userStore);
 
 const filieres = ref([])
 onMounted(() => {

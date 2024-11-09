@@ -51,9 +51,7 @@ const allIsChecked = computed({
         }
     }
 })
-const handleChange = () => {
-    //allIsChecked.value = data.value.filieres_id
-}
+
 const crudStore = useCrudStore();
 const { loading, url, rows: filieres } = storeToRefs(crudStore);
 url.value = "api/filieres";

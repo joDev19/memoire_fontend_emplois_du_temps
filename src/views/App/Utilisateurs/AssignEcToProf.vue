@@ -43,7 +43,7 @@ if (profId.value == null) {
     router.push({ name: 'users-list' })
 }
 onMounted(() => {
-    client.get('apiecs').then((response) => {
+    client.get('api/ecs').then((response) => {
         ecs.value = response.data
         ecsDisplay.value = ecs.value
     })

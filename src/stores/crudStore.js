@@ -34,7 +34,7 @@ export const useCrudStore = defineStore('crudStore', {
                     resolve(this.row);
                     this.loading = false
                 }else{
-                    client.get(`api/${this.url}/${id}`)
+                    client.get(`${this.url}/${id}`)
                         .then((response) => {
                             this.row = response.data;
                             resolve(this.row);

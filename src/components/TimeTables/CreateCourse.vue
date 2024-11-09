@@ -148,9 +148,9 @@ const checkConflict = () => {
     // console.log(day, start, end,)
     let returnValue = false;
     events.value.forEach(course => {
-        const courseDate = `${course.start.getFullYear()}-${dateFormatter(course.start.getMonth() + 1)}-${dateFormatter(course.start.getDate())}`
-        const courseStart = `${dateFormatter(course.start.getHours())}:${dateFormatter(course.start.getMinutes())}`
-        const courseEnd = `${dateFormatter(course.end.getHours())}:${dateFormatter(course.end.getMinutes())}`
+        const courseDate = `${new Date(course.start).getFullYear()}-${dateFormatter(new Date(course.start).getMonth() + 1)}-${dateFormatter(new Date(course.start).getDate())}`
+        const courseStart = `${dateFormatter(new Date(course.start).getHours())}:${dateFormatter(new Date(course.start).getMinutes())}`
+        const courseEnd = `${dateFormatter(new Date(course.end).getHours())}:${dateFormatter(new Date(course.end).getMinutes())}`
         // console.log(start, courseEnd, Date.parse('01/01/2024 ' + start) < Date.parse('01/01/2024 ' + courseEnd))
 
         if (courseDate == day && (Date.parse('01/01/2024 ' + start) < Date.parse('01/01/2024 ' + courseEnd))) {

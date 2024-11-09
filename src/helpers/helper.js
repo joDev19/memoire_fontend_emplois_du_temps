@@ -59,9 +59,12 @@ const isResponsable = (roles) => {
 const isProfesseur = (roles) => {
     return roles?.find(role => role.label == 'professeur') != undefined
 }
+const isCoordonateur = (roles) => {
+    return roles?.find(role => role.label == 'coordinateur') != undefined
+}
 const isAdmin = (roles) => {
     return roles?.find(role => role.label == 'admin') != undefined
 }
 export {
-    dateFormatter, eventFormToEventToDisplayFormatter, getFirstDayOfWeek, setDateWhenDragOrResize, isResponsable, isProfesseur
+    dateFormatter, eventFormToEventToDisplayFormatter, getFirstDayOfWeek, setDateWhenDragOrResize, isResponsable, isProfesseur, isCoordonateur
 }

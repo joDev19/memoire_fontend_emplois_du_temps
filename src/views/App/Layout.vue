@@ -19,7 +19,7 @@
                         </p>
                     </router-link>
                 </li>
-                <li>
+                <li v-if="isCoordonateur(user?.roles)">
                     <router-link :to="{ name: 'configs' }" class="h-12 flex justify-center items-center border-b"
                         :class="router.currentRoute.value.meta.activePath == 'config' ? 'text-sky-600' : ''">
                         <font-awesome-icon :icon="faGear" size="2x" class="hover:cursor-pointer w-1/5"
@@ -68,6 +68,7 @@ import router from '@/router';
 import { useUserStore } from '@/stores/utilisateur';
 import { storeToRefs } from 'pinia';
 import client from '@/axiosClient';
+import { isCoordonateur } from '@/helpers/helper';
 const userStore = useUserStore()
 const {user} = storeToRefs(userStore)
 const isNavBar = ref(true)

@@ -81,7 +81,7 @@ const storeEcDone = () => {
         nbr_hour: nbr_hour.value
     }
     // console.log(data)
-   client.post('apiec-dones', data).then(()=>{
+   client.post('api/ec-dones', data).then(()=>{
     router.push({name: 'responsable-matiere'})
    })
 }

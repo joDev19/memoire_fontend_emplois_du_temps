@@ -123,7 +123,7 @@ const handleImport = () => {
     date.setDate(date.getDate() - 7);
     // faire la requete api
     const _data = `${date.getFullYear()}-${dateFormatter(date.getMonth() + 1)}-${dateFormatter(date.getDate())}`
-    client.post('apicourses/get-old-courses', {
+    client.post('api/courses/get-old-courses', {
         oldDate: _data,
         yearId: data.value.classe_id
     }).then(response => {

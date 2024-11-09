@@ -63,15 +63,15 @@ const handleSubmit = () => {
         client.post('api/login', user.value).then((response) => {
             // console.log(response.data)
             user.value = response.data
-            router.push({ name: 'dashboard' })
+            router.push({ name: 'dashboard' });
         })
     })
 
 }
 watch(typeOfUser, (newValue) => {
-    if(newValue == "coordinateur"){
+    if (newValue == "coordinateur") {
         user.value.matricule = undefined;
-    }else{
+    } else {
         user.value.email = undefined;
     }
 })

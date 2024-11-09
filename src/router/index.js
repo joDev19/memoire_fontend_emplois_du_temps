@@ -50,13 +50,13 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login,
-     
+
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
-      meta:{
+      meta: {
         activePath: 'dashboard',
       }
     },
@@ -72,7 +72,7 @@ const router = createRouter({
       path: '/configs',
       name: 'configs',
       component: Config,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -81,7 +81,7 @@ const router = createRouter({
       path: '/configs/filieres',
       name: 'filieres-list',
       component: FiliereIndex,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -89,7 +89,7 @@ const router = createRouter({
       path: '/configs/filieres/create/',
       name: 'filieres-create',
       component: FiliereCreate,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -98,7 +98,7 @@ const router = createRouter({
       props: true,
       name: 'filiere-show',
       component: FiliereShow,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -107,7 +107,7 @@ const router = createRouter({
       path: '/configs/semestres',
       name: 'semestres-list',
       component: SemestreIndex,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -115,7 +115,7 @@ const router = createRouter({
       path: '/configs/semestres/create',
       name: 'semestres-create',
       component: SemestreCreate,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -124,7 +124,7 @@ const router = createRouter({
       path: '/configs/unite_d_enseignements',
       name: 'ues-list',
       component: UesIndex,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -133,17 +133,17 @@ const router = createRouter({
       props: true,
       name: 'ue-show',
       component: UeShow,
-      meta:{
+      meta: {
         activePath: 'config',
       }
-      
+
     },
     {
       path: '/configs/unite_d_enseignement/create/',
       // props: true,
       name: 'ue-create',
       component: UeCreate,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -152,7 +152,7 @@ const router = createRouter({
       path: '/configs/matieres',
       name: 'ecs-list',
       component: EcsIndex,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -160,7 +160,7 @@ const router = createRouter({
       path: '/configs/matieres/create',
       name: 'ec-create',
       component: EcCreate,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -169,17 +169,17 @@ const router = createRouter({
       props: true,
       name: 'ec-show',
       component: EcShow,
-      meta:{
+      meta: {
         activePath: 'config',
       }
-      
+
     },
     // Utilisateurs
     {
       path: '/configs/utilisateurs',
       name: 'users-list',
       component: UsersIndex,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -188,16 +188,16 @@ const router = createRouter({
       props: true,
       name: 'user-show',
       component: UserShow,
-      meta:{
+      meta: {
         activePath: 'config',
       }
-      
+
     },
     {
       path: '/configs/utilisateur/create',
       name: 'user-create',
       component: UserCreate,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -205,7 +205,7 @@ const router = createRouter({
       path: '/configs/utilisateur/assign-ec',
       name: 'assign-ec',
       component: AssignEcToProf,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -214,7 +214,7 @@ const router = createRouter({
       path: '/configs/jours',
       name: 'days-list',
       component: DaysIndex,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -223,7 +223,7 @@ const router = createRouter({
       path: '/configs/heures',
       name: 'hours-list',
       component: HoursIndex,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -232,7 +232,7 @@ const router = createRouter({
       path: '/configs/classes',
       name: 'classe-list',
       component: ClassesIndex,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -240,7 +240,7 @@ const router = createRouter({
       path: '/configs/classe/create',
       name: 'classe-create',
       component: ClasseCreate,
-      meta:{
+      meta: {
         activePath: 'config',
       }
     },
@@ -258,7 +258,7 @@ const router = createRouter({
       path: '/responsable/dashboard',
       name: 'responsable-dashboard',
       component: DashboardResponsable,
-      meta:{
+      meta: {
         activePath: 'dashboard',
       }
     },
@@ -284,20 +284,24 @@ const router = createRouter({
   ]
 })
 const isAuthenticated = () => {
-  client.get('api/user').then((response) => {
-    console.log(response.data)
-    useUserStore().user = response.data;
-  })
+  return client.get('api/user');
 }
-router.beforeEach(async (to, from) => {
-  if (
-    // make sure the user is authenticated
-    !isAuthenticated &&
-    // ❗️ Avoid an infinite redirect
-    to.name !== 'Login'
-  ) {
-    // redirect the user to the login page
-    return { name: 'Login' }
+
+
+  router.beforeEach(async (to, from) => {
+    
+    if (useUserStore().user.id == undefined) {
+    isAuthenticated().then((response) => {
+      useUserStore().user = response.data
+      if (
+        // ❗️ Avoid an infinite redirect
+        to.name !== 'login'
+      ) {
+        // redirect the user to the login page
+        return { name: 'Login' }
+      }
+    })
   }
-})
+
+  })
 export default router

@@ -71,7 +71,7 @@ const chooseWeek = (id) => {
     week_id.value = id;
     isShowingCalendar.value = true;
     loading.value = true
-    url.value = `timetables/year/${year_id.value}/week/${week_id.value}`
+    url.value = `api/timetables/year/${year_id.value}/week/${week_id.value}`
     client.get(url.value).then(response => {
 
         dataToShow.value = response.data

@@ -69,7 +69,7 @@ const chooseEc = () => {
         });
     } else {
         modalIsOpen.value = false;
-        router.push({ name: 'responsable-matiere' })
+        
     }
 
 }

@@ -115,7 +115,7 @@ const data = ref([
     //     'id': 3
     // },
 ]);
-url.value = `ecs/year/${yearId.value}/filiere/${filiereId.value}`
+url.value = `api/ecs/year/${yearId.value}/filiere/${filiereId.value}`
 const showEc = (id) => {
     router.push({ name: 'responsable-matiere-update', params: { ecId: id } })
 }
