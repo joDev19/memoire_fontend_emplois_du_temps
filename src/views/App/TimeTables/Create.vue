@@ -83,32 +83,39 @@ const { open, close } = useModal({
     },
 })
 const storeTimeTables = () => {
-    const firstDayOfTheWeek = getFirstDayOfWeek(new Date(events.value[0].start))
-    const lastDayOfTheWeek = new Date(firstDayOfTheWeek);
-    lastDayOfTheWeek.setDate(firstDayOfTheWeek.getDate() + 5);
-    //console.log(events.value)
-    const weekEvents = [...events.value].map(el => {
-        return {
-            ec_id: el.title,
-            day: `${new Date(el.start).getFullYear()}-${dateFormatter(new Date(el.start).getMonth() + 1)}-${dateFormatter(new Date(el.start).getDate())}`,
-            start: `${dateFormatter(new Date(el.start).getHours())}:${dateFormatter(new Date(el.start).getMinutes())}`,
-            end: `${dateFormatter(new Date(el.end).getHours())}:${dateFormatter(new Date(el.end).getMinutes())}`,
-            filieres_id: el.filieres,
-            classe_id: el.salle
-        }
-    })
-    const data_to_send = {
-        courses: weekEvents,
-        weekStartDate: `${firstDayOfTheWeek.getFullYear()}-${dateFormatter(firstDayOfTheWeek.getMonth() + 1)}-${dateFormatter(firstDayOfTheWeek.getDate())}`,
-        weekEndDate: `${lastDayOfTheWeek.getFullYear()}-${dateFormatter(lastDayOfTheWeek.getMonth() + 1)}-${dateFormatter(lastDayOfTheWeek.getDate())}`,
-    }
-    // console.log(data_to_send)
-    client.post('api/timetables', data_to_send).then((response) => {
-        notify({
-            text: "Enregistré avec succès",
-            type: "success"
+    if(events.value.length > 0){
+        const firstDayOfTheWeek = getFirstDayOfWeek(new Date(events.value[0].start))
+        const lastDayOfTheWeek = new Date(firstDayOfTheWeek);
+        lastDayOfTheWeek.setDate(firstDayOfTheWeek.getDate() + 5);
+        //console.log(events.value)
+        const weekEvents = [...events.value].map(el => {
+            return {
+                ec_id: el.title,
+                day: `${new Date(el.start).getFullYear()}-${dateFormatter(new Date(el.start).getMonth() + 1)}-${dateFormatter(new Date(el.start).getDate())}`,
+                start: `${dateFormatter(new Date(el.start).getHours())}:${dateFormatter(new Date(el.start).getMinutes())}`,
+                end: `${dateFormatter(new Date(el.end).getHours())}:${dateFormatter(new Date(el.end).getMinutes())}`,
+                filieres_id: el.filieres,
+                classe_id: el.salle
+            }
         })
-    })
+        const data_to_send = {
+            courses: weekEvents,
+            weekStartDate: `${firstDayOfTheWeek.getFullYear()}-${dateFormatter(firstDayOfTheWeek.getMonth() + 1)}-${dateFormatter(firstDayOfTheWeek.getDate())}`,
+            weekEndDate: `${lastDayOfTheWeek.getFullYear()}-${dateFormatter(lastDayOfTheWeek.getMonth() + 1)}-${dateFormatter(lastDayOfTheWeek.getDate())}`,
+        }
+        // console.log(data_to_send)
+        client.post('api/timetables', data_to_send).then((response) => {
+            notify({
+                text: "Enregistré avec succès",
+                type: "success"
+            })
+        })
+    }else{
+        notify({
+            text: "Veuillez ajouter au moins un événement.",
+            type: "warn"
+        })
+    }
 
 }
 const handleImport = () => {

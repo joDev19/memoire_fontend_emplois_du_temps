@@ -67,6 +67,7 @@ import { onMounted } from 'vue';
 import Loader from '@/components/Loader.vue';
 import client from '@/axiosClient';
 import router from '@/router';
+import { notify } from '@kyvg/vue3-notification';
 const crudStore = useCrudStore()
 const { url, row: ec, loading } = storeToRefs(crudStore)
 const props = defineProps(['ecId'])
@@ -82,10 +83,15 @@ const storeEcDone = () => {
     }
     // console.log(data)
    client.post('api/ec-dones', data).then(()=>{
+    notify({
+        text: "Masse horaire mis à jour avec succès",
+        type: "success",
+    })
     router.push({name: 'responsable-matiere'})
    })
 }
 onMounted(() => {
+    
     url.value = "api/ecs"
     crudStore.show(props.ecId)
 })

@@ -17,13 +17,15 @@
                         <div class="flex justify-around">
                             <input type="text" id="label"
                                 class="lg:border lg:rounded h-10 w-auto lg:h-10 lg:p-2 focus:outline-sky-600"
-                                placeholder="Filtrer par nom" />
+                                placeholder="Filtrer par nom" v-model="filterBy.label" />
                             <input type="text" id="label"
                                 class="lg:border lg:rounded h-10 w-auto lg:h-10 lg:p-2 focus:outline-sky-600"
-                                placeholder="Filtrer par code" />
+                                placeholder="Filtrer par code" v-model="filterBy.code" />
                             <select id="label"
-                                class="lg:border lg:rounded h-10 w-auto lg:h-10 lg:p-2 focus:outline-sky-600">
-                                <option>Filtrer par UE</option>
+                                class="lg:border lg:rounded h-10 w-auto lg:h-10 lg:p-2 focus:outline-sky-600"
+                                v-model="filterBy.ueId">
+                                <option value="0">Filtrer par UE</option>
+                                <option v-for="ue in createData.ues" :key="ue.id" :value="ue.id">{{ ue.label }}</option>
                             </select>
                         </div>
                     </div>
@@ -34,7 +36,7 @@
                             class="lg:border lg:rounded lg:w-full h-10 lg:h-10 lg:p-2 focus:outline-sky-600"
                             v-model="event.title">
                             <!-- <option value="1">Politique de sécurité des systèmes d'information</option> -->
-                            <option v-for="ec in createData.ecs" :key="ec.id" :value="ec.id">{{ ec.label }}</option>
+                            <option v-for="ec in ecToDisplay" :key="ec.id" :value="ec.id">{{ ec.label }}</option>
                         </select>
                     </div>
                     <div class="lg:mb-3">
@@ -113,7 +115,7 @@
 <script setup>
 import { useTableTimeStore } from '@/stores/timeTableStore';
 import { storeToRefs } from 'pinia';
-import { onMounted, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { eventFormToEventToDisplayFormatter } from '@/helpers/helper';
 import { VueFinalModal } from 'vue-final-modal'
 import { useCrudStore } from '@/stores/crudStore';
@@ -126,6 +128,11 @@ import { dateFormatter } from '@/helpers/helper';
 const tableTimeStore = useTableTimeStore()
 
 const { events, modalIsOpen, event, data, isUpdateEvent, eventInCopy } = storeToRefs(tableTimeStore);
+const filterBy = ref({
+    label: "",
+    code: "",
+    ueId: 0,
+})
 if (!eventInCopy.value) {
     tableTimeStore.resetEventFiliere();
 }
@@ -262,14 +269,40 @@ const updateEvent = () => {
     // });
 
 }
+const ecToDisplay = ref([]);
 onMounted(() => {
     loading.value = true
     client.get(`api/course/create/year/${data.value.classe_id}`).then((response) => {
         createData.value = response.data;
-        loading.value = false
+        loading.value = false;
+        ecToDisplay.value = createData.value.ecs;""
     })
 })
-
+// recherche par nom
+watch(() => filterBy.value.label, (newLabel) => {
+    if (newLabel == "") {
+        ecToDisplay.value = createData.value.ecs;
+    } else {
+        ecToDisplay.value = createData.value.ecs.filter(ec => ec.label.toLowerCase().includes(newLabel.toLowerCase()))
+    }
+})
+// recherche par code
+watch(() => filterBy.value.code, (newCode) => {
+    if (newCode == "") {
+        ecToDisplay.value = createData.value.ecs;
+    } else {
+        ecToDisplay.value = createData.value.ecs.filter(ec => ec.code.toLowerCase().includes(newCode.toLowerCase()))
+    }
+})
+// filter par UEs
+watch(() => filterBy.value.ueId, (newUeId) => {
+    if (newUeId == 0) {
+        ecToDisplay.value = createData.value.ecs;
+    } else {
+        ecToDisplay.value = createData.value.ecs.filter(ec => ec.ue_id == newUeId)
+    }
+})
+// assigner automatiquement les filières
 watch(() => event.value.title, (newEc) => {
     if (event.value.title != undefined) {
         const profId = createData.value.ecs.find((el) => el.id == newEc).professeur_id;

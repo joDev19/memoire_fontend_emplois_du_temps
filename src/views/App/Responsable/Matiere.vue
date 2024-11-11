@@ -120,7 +120,7 @@ const showEc = (id) => {
     router.push({ name: 'responsable-matiere-update', params: { ecId: id } })
 }
 if(yearId.value == 0 || filiereId.value == 0){
-    //router.push({name: "responsable-dashboard"})
+    router.push({name: "dashboard"})
 }
 onMounted(()=>{
     crudStore.index().then(()=>{
