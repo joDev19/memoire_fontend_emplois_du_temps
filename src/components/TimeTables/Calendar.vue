@@ -56,6 +56,7 @@ const calendarOptions = ref({
     plugins: [timeGridPlugin, interactionPlugin],
     locale: frLocale,
     initialView: 'timeGridWeek',
+    handleWindowResize: true,
     hiddenDays: [0],
     headerToolbar: isShowingCalendar.value === false ? {
         start: 'title', // will normally be on the left. if RTL, will be on the right

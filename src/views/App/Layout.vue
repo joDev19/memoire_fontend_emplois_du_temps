@@ -12,8 +12,7 @@
                     <router-link :to="{ name: 'dashboard' }" class="h-12 flex justify-center items-center border-b"
                         :class="router.currentRoute.value.meta.activePath == 'dashboard' ? 'text-sky-600' : ''">
                         <font-awesome-icon :icon="faGauge" size="2x" class="hover:cursor-pointer w-1/5"
-                            :class="router.currentRoute.value.meta.activePath == 'dashboard' ? 'text-sky-600' : ''"
-                             />
+                            :class="router.currentRoute.value.meta.activePath == 'dashboard' ? 'text-sky-600' : ''" />
                         <p class="w-4/5">
                             Tableau de bord
                         </p>
@@ -23,17 +22,18 @@
                     <router-link :to="{ name: 'configs' }" class="h-12 flex justify-center items-center border-b"
                         :class="router.currentRoute.value.meta.activePath == 'config' ? 'text-sky-600' : ''">
                         <font-awesome-icon :icon="faGear" size="2x" class="hover:cursor-pointer w-1/5"
-                            :class="router.currentRoute.value.meta.activePath == 'config' ? 'text-sky-600' : ''"
-                             />
+                            :class="router.currentRoute.value.meta.activePath == 'config' ? 'text-sky-600' : ''" />
                         <p class="w-4/5">
                             Configurations
                         </p>
                     </router-link>
                 </li>
-                <li>
-                    <router-link :to="{ name: 'timetable-create' }" class="h-12 flex justify-center items-center border-b" :class="router.currentRoute.value.meta.activePath == 'timetables' ? 'text-sky-600' : ''">
-                        <font-awesome-icon :icon="faCalendarWeek" size="2x"
-                            class="hover:cursor-pointer w-1/5" :class="router.currentRoute.value.meta.activePath == 'timetables' ? 'text-sky-600' : ''"  />
+                <li v-if="isCoordonateur(user?.roles)">
+                    <router-link :to="{ name: 'timetable-create' }"
+                        class="h-12 flex justify-center items-center border-b"
+                        :class="router.currentRoute.value.meta.activePath == 'timetables' ? 'text-sky-600' : ''">
+                        <font-awesome-icon :icon="faCalendarWeek" size="2x" class="hover:cursor-pointer w-1/5"
+                            :class="router.currentRoute.value.meta.activePath == 'timetables' ? 'text-sky-600' : ''" />
                         <p class="w-4/5">
                             Créer un emplois du temps
                         </p>
@@ -48,9 +48,11 @@
                 <font-awesome-icon :icon="faBars" size="3x" class="m-1 hover:cursor-pointer text-slate-300"
                     v-if="!isNavBar" @click="isNavBar = true" />
                 <div class="h-full w-full flex justify-between items-center">
-                    <p class="p-2 flex items-center gap-1"> <font-awesome-icon :icon="faUser" size="1x" class="m-1 hover:cursor-pointer border p-2 rounded-full bg-slate-100 " />{{ user.name }} <span class="text-sky-600">(en ligne)</span></p>
+                    <p class="p-2 flex items-center gap-1"> <font-awesome-icon :icon="faUser" size="1x"
+                            class="m-1 hover:cursor-pointer border p-2 rounded-full bg-slate-100 " />{{ user.name }}
+                        <span class="text-sky-600">(en ligne)</span></p>
                     <font-awesome-icon :icon="faSignOut" size="2x" class="m-1 hover:cursor-pointer " @click="logout" />
-                    
+
                 </div>
             </div>
             <slot />
@@ -68,13 +70,17 @@ import router from '@/router';
 import { useUserStore } from '@/stores/utilisateur';
 import { storeToRefs } from 'pinia';
 import client from '@/axiosClient';
+import { useCrudStore } from '@/stores/crudStore';
 import { isCoordonateur } from '@/helpers/helper';
 const userStore = useUserStore()
-const {user} = storeToRefs(userStore)
+
+const { user } = storeToRefs(userStore)
 const isNavBar = ref(true)
 const logout = () => {
     client.get('api/logout').then(() => {
-       router.push({name: "login"}); 
+        user.value = {};
+        router.push({ name: "login" });
+        useCrudStore().resetAll();
     })
 }
 </script>

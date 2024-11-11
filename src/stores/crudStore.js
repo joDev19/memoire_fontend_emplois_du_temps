@@ -9,6 +9,13 @@ export const useCrudStore = defineStore('crudStore', {
         createData: {},
     }),
     actions: {
+        resetAll(){
+            this.url = ""
+            this.loading = false
+            this.rows = []
+            this.row = null
+            this.createData = {} 
+        },
         index() {
             this.loading = true;
             return new Promise((resolve, reject) => {

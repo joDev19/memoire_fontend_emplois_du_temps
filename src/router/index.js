@@ -254,14 +254,14 @@ const router = createRouter({
       }
     },
     /************************************* responsable ****************************** */
-    {
-      path: '/responsable/dashboard',
-      name: 'responsable-dashboard',
-      component: DashboardResponsable,
-      meta: {
-        activePath: 'dashboard',
-      }
-    },
+    // {
+    //   path: '/responsable/dashboard',
+    //   name: 'responsable-dashboard',
+    //   component: DashboardResponsable,
+    //   meta: {
+    //     activePath: 'dashboard',
+    //   }
+    // },
     {
       path: '/responsable/matiere',
       name: 'responsable-matiere',
@@ -298,7 +298,7 @@ const isAuthenticated = () => {
         to.name !== 'login'
       ) {
         // redirect the user to the login page
-        return { name: 'Login' }
+        return { name: 'login' }
       }
     })
   }

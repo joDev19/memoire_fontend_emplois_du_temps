@@ -5,7 +5,8 @@
             <h1 class="text-sky-600 text-lg font-semibold mb-3">Voir les emplois du temps</h1>
             <div class="grid lg:grid-cols-5 gap-5">
                 <div v-for="year in years" :key="year.id"
-                    class="h-24 border rounded bg-white hover:border-sky-600 hover:cursor-pointer flex justify-around flex-col px-1" @click="chooseYear(year.id)">
+                    class="h-24 border rounded bg-white hover:border-sky-600 hover:cursor-pointer flex justify-around flex-col px-1"
+                    @click="chooseYear(year.id)">
                     <p class="text-center">{{ year.label }} ({{
                         year.semestres?.map((el) => el.code).join(' & ') }})</p>
                 </div>
@@ -14,7 +15,8 @@
                 <h1 class="text-sky-600 text-lg font-semibold mb-3">Renseigner les heures de cours</h1>
                 <div class="grid lg:grid-cols-5 gap-5">
                     <div class="h-24 border rounded bg-white hover:border-sky-600 hover:cursor-pointer flex justify-around flex-col"
-                        v-for="item in itemsToDisplay" :key="item" @click="router.push({ name: 'responsable-matiere' })">
+                        v-for="item in itemsToDisplay" :key="item"
+                        @click="router.push({ name: 'responsable-matiere' })">
                         <FontAwesomeIcon :icon="item.icon" size="3x" :title="item.label" />
                         <p class="text-center">{{ item.label }}</p>
                     </div>
@@ -53,6 +55,8 @@ const itemsToDisplay = ref([
         // routeName: 'filieres-list'
     },
 ])
+yearId.value = user.value.year_id;
+filiereId.value = user.value.filiere_id;
 watch(user, (newValue) => {
     console.log(newValue);
     yearId.value = user.value.year_id;
@@ -60,15 +64,15 @@ watch(user, (newValue) => {
 })
 const crudStore = useCrudStore()
 const showTableTimeStore = useShowTableTime()
-const {year_id} = storeToRefs(showTableTimeStore)
-const {url, rows: years} = storeToRefs(crudStore)
+const { year_id } = storeToRefs(showTableTimeStore)
+const { url, rows: years } = storeToRefs(crudStore)
 url.value = "api/years"
 const chooseYear = (id) => {
     year_id.value = id
-    router.push({name: 'choose-week'})
+    router.push({ name: 'choose-week' })
 }
-onMounted(()=>{
-    crudStore.index().then((data)=>{
+onMounted(() => {
+    crudStore.index().then((data) => {
         //console.log(data);
     })
 })

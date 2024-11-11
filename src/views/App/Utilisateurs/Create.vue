@@ -98,7 +98,8 @@ import { useCrudStore } from '@/stores/crudStore';
 const crudStore = useCrudStore()
 const { url, loading, createData } = storeToRefs(crudStore)
 const userStore = useUserStore();
-const { user } = storeToRefs(userStore)
+// const { user } = storeToRefs(userStore)
+const user = ref({})
 const createUser = () => {
     // console.log()
 

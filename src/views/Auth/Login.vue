@@ -69,11 +69,7 @@ const handleSubmit = () => {
 
 }
 watch(typeOfUser, (newValue) => {
-    if (newValue == "coordinateur") {
-        user.value.matricule = undefined;
-    } else {
-        user.value.email = undefined;
-    }
+    user.value = {};
 })
 </script>
 

@@ -23,6 +23,7 @@ const showTableTime = useShowTableTime();
 const { filiere_id, year_id, week_id } = storeToRefs(showTableTime)
 import { useUserStore } from '@/stores/utilisateur';
 import { isCoordonateur } from '@/helpers/helper';
+import router from '@/router';
 const userStore = useUserStore();
 const {user} = storeToRefs(userStore);
 
@@ -49,8 +50,11 @@ watch(filiere_id, (newFiliereId) => {
 })
 const forward = () => {
     // console.log(year_id.value, filiere_id.value, week_id.value)
+    loading.value = true;
     client.get(`api/timetables/forward/year/${year_id.value}/week/${week_id.value}/filiere/${filiere_id.value}`).then((response) => {
         // console.log(response.data)
+        loading.value = false;
+        router.push({name: "dashboard"})
     })
 }
 </script>

@@ -37,7 +37,7 @@
                             <p class="pl-10">Professeur :</p>
                             <p>{{ ec?.professeur }}</p>
                             <p class="pl-10">UE :</p>
-                            <p>{{ ec?.ue.label }}</p>
+                            <p>{{ ec?.ue?.label }}</p>
                             <p class="pl-10">Filières :</p>
                             <p>{{ ec?.filieres.map(filiere => filiere.code).join(', ') }}</p>
                             <p class="pl-10">Semestre :</p>
