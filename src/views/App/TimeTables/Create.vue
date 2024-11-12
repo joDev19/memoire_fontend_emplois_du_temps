@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <div class="p-5">
-            <MiniHeader title="Créer un nouvel emplois du temps"
+            <MiniHeader :title="year.label ? 'Créer un nouvel emplois du temps '+'('+year.label+')': 'Créer un nouvel emplois du temps '"
                 description="Programmer des cours pour une semaine de votre choix" />
             <div>
                 <template v-if="currentStep == 'classe'">
@@ -11,7 +11,6 @@
                     <ChooseFiliere />
                 </template>
                 <div class="bg-white w-full p-2 mx-auto rounded-lg" v-if="currentStep == 'calendar'">
-
                     <div class="flex justify-end gap-3">
                         <button class="btn bg-sky-600 text-white p-2 rounded-lg"
                             @click="currentStep = 'filiere'"><font-awesome-icon :icon="faArrowLeft" /> Précédent
@@ -48,7 +47,7 @@ import ChooseClasse from '@/components/TimeTables/ChooseClasse.vue';
 import { storeToRefs } from 'pinia';
 import { dateFormatter, getFirstDayOfWeek } from '@/helpers/helper';
 const tableTimeStore = useTableTimeStore()
-const { modalIsOpen, currentStep, data, events, startDateOfTheWeek } = storeToRefs(tableTimeStore)
+const { modalIsOpen, currentStep, data, events, startDateOfTheWeek, year } = storeToRefs(tableTimeStore)
 import { useCrudStore } from '@/stores/crudStore';
 import Matiere from '../Responsable/Matiere.vue';
 import client from '@/axiosClient';
@@ -83,7 +82,7 @@ const { open, close } = useModal({
     },
 })
 const storeTimeTables = () => {
-    if(events.value.length > 0){
+    if (events.value.length > 0) {
         const firstDayOfTheWeek = getFirstDayOfWeek(new Date(events.value[0].start))
         const lastDayOfTheWeek = new Date(firstDayOfTheWeek);
         lastDayOfTheWeek.setDate(firstDayOfTheWeek.getDate() + 5);
@@ -109,8 +108,9 @@ const storeTimeTables = () => {
                 text: "Enregistré avec succès",
                 type: "success"
             })
+            router.push({ name: 'dashboard' });
         })
-    }else{
+    } else {
         notify({
             text: "Veuillez ajouter au moins un événement.",
             type: "warn"
@@ -154,6 +154,7 @@ onUnmounted(() => {
     }
 
 })
+
 </script>
 
 <style lang="css"></style>

@@ -44,13 +44,14 @@ import { useTableTimeStore } from '@/stores/timeTableStore';
 import { storeToRefs } from 'pinia';
 import { dateFormatter } from '@/helpers/helper';
 import { useCrudStore } from '@/stores/crudStore';
+import client from '@/axiosClient';
 
 
 const emits = defineEmits(['openModal'])
 const tableTimeStore = useTableTimeStore()
 const crudStore = useCrudStore()
 const { createData } = storeToRefs(crudStore);
-const { events, modalIsOpen, event, isUpdateEvent, isShowingCalendar, dataToShow, eventInCopy, startDateOfTheWeek } = storeToRefs(tableTimeStore);
+const { events, modalIsOpen, event, isUpdateEvent, isShowingCalendar, dataToShow, eventInCopy, startDateOfTheWeek, data, year } = storeToRefs(tableTimeStore);
 
 const calendarOptions = ref({
     plugins: [timeGridPlugin, interactionPlugin],
@@ -170,9 +171,13 @@ watch(events, (newEvent) => {
     calendarOptions.value.events = newEvent
     // console.log("watrcher de event")
 })
+
 onMounted(() => {
-    //récupérer le lundi de la semaine courante
-    // faire une requête pour vérifier s'il y a une semaine de cours qui est avant la semaine de la date actuelle.
+    if(!isShowingCalendar.value){
+        client.get(`api/years/${data.value.classe_id}`).then((response) => {
+            year.value = response.data;
+        })
+    }
 })
 </script>
 

@@ -13,6 +13,7 @@ export const useTableTimeStore = defineStore('tableTime', {
     dataToShow: null,
     eventInCopy: false,
     startDateOfTheWeek: "",
+    year: {},
   }),
 
   actions: {

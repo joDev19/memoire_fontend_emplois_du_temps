@@ -227,19 +227,21 @@ const beforeOpen = () => {
 }
 const closed = () => {
     if (event.value.date != undefined) {
-        // si l'id du event est dans la tableau events alors je change le format sinon je fais rien.
-        const tmpEvents = [...events.value];
-        // console.log(tmpEvents.find(ev => ev.id == event.value.id))
-        tmpEvents.forEach((el, i) => {
-            if (el.id == event.value.id) {
-                //alert(find);
-                tmpEvents[i] = eventFormToEventToDisplayFormatter(events.value, event.value, event.value.id)
-            }
-        })
-        events.value = []
-        events.value = tmpEvents
-        //alert('changer le format')
-        event.value = {};
+        if(eventInCopy.value == false){
+            // si l'id du event est dans la tableau events alors je change le format sinon je fais rien.
+            const tmpEvents = [...events.value];
+            // console.log(tmpEvents.find(ev => ev.id == event.value.id))
+            tmpEvents.forEach((el, i) => {
+                if (el.id == event.value.id) {
+                    //alert(find);
+                    tmpEvents[i] = eventFormToEventToDisplayFormatter(events.value, event.value, event.value.id)
+                }
+            })
+            events.value = []
+            events.value = tmpEvents
+            //alert('changer le format')
+            event.value = {};
+        }
     }
     // alert('oki')
     modalIsOpen.value = false;
