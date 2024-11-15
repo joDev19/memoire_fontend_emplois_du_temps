@@ -21,6 +21,7 @@
     "@kyvg/vue3-notification": "^3.4.0",
     "axios": "^1.7.7",
     "bulma": "^1.0.2",
+    "chart.js": "^4.4.6",
     "datatables.net-bm": "^2.1.5",
     "datatables.net-bs5": "^2.1.5",
     "datatables.net-dt": "^2.1.5",

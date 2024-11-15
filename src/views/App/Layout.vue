@@ -1,47 +1,50 @@
 <template>
-    <div class="lg:w-full lg:min-h-screen lg:flex bg-slate-100 text-black">
-        <div class="bg-white" :class="isNavBar ? 'w-1/5' : ''" v-if="isNavBar">
-            <div class="h-12 border-b flex justify-between items-center">
-                <p class="m-1 text-xl text-sky-600 font-semibold">Menus</p>
-                <font-awesome-icon :icon="faXmark" size="3x" class="m-1 hover:cursor-pointer text-slate-300"
-                    @click="isNavBar = false" />
-
+    <div class="w-full min-h-screen flex bg-slate-100 text-black">
+        <Transition appear name="slide">
+            <div class="bg-white lg:fixed h-screen top-0 left-0" :class="isNavBar ? 'w-1/5' : ''" v-if="isNavBar">
+                <div class="h-12 border-b flex justify-between items-center">
+                    <p class="m-1 text-xl text-sky-600 font-semibold">Menus</p>
+                    <font-awesome-icon :icon="faXmark" size="3x" class="m-1 hover:cursor-pointer text-slate-300"
+                        @click="isNavBar = false" />
+    
+                </div>
+                <ul class="mt-3">
+                    <li>
+                        <router-link :to="{ name: 'dashboard' }" class="h-12 flex justify-center items-center border-b"
+                            :class="router.currentRoute.value.meta.activePath == 'dashboard' ? 'text-sky-600' : ''">
+                            <font-awesome-icon :icon="faGauge" size="2x" class="hover:cursor-pointer w-1/5"
+                                :class="router.currentRoute.value.meta.activePath == 'dashboard' ? 'text-sky-600' : ''" />
+                            <p class="w-4/5">
+                                Tableau de bord
+                            </p>
+                        </router-link>
+                    </li>
+                    <li v-if="isCoordonateur(user?.roles)">
+                        <router-link :to="{ name: 'configs' }" class="h-12 flex justify-center items-center border-b"
+                            :class="router.currentRoute.value.meta.activePath == 'config' ? 'text-sky-600' : ''">
+                            <font-awesome-icon :icon="faGear" size="2x" class="hover:cursor-pointer w-1/5"
+                                :class="router.currentRoute.value.meta.activePath == 'config' ? 'text-sky-600' : ''" />
+                            <p class="w-4/5">
+                                Configurations
+                            </p>
+                        </router-link>
+                    </li>
+                    <li v-if="isCoordonateur(user?.roles)">
+                        <router-link :to="{ name: 'timetable-create' }"
+                            class="h-12 flex justify-center items-center border-b"
+                            :class="router.currentRoute.value.meta.activePath == 'timetables' ? 'text-sky-600' : ''">
+                            <font-awesome-icon :icon="faCalendarWeek" size="2x" class="hover:cursor-pointer w-1/5"
+                                :class="router.currentRoute.value.meta.activePath == 'timetables' ? 'text-sky-600' : ''" />
+                            <p class="w-4/5">
+                                Créer un emplois du temps
+                            </p>
+                        </router-link>
+                    </li>
+    
+                </ul>
             </div>
-            <ul class="mt-3">
-                <li>
-                    <router-link :to="{ name: 'dashboard' }" class="h-12 flex justify-center items-center border-b"
-                        :class="router.currentRoute.value.meta.activePath == 'dashboard' ? 'text-sky-600' : ''">
-                        <font-awesome-icon :icon="faGauge" size="2x" class="hover:cursor-pointer w-1/5"
-                            :class="router.currentRoute.value.meta.activePath == 'dashboard' ? 'text-sky-600' : ''" />
-                        <p class="w-4/5">
-                            Tableau de bord
-                        </p>
-                    </router-link>
-                </li>
-                <li v-if="isCoordonateur(user?.roles)">
-                    <router-link :to="{ name: 'configs' }" class="h-12 flex justify-center items-center border-b"
-                        :class="router.currentRoute.value.meta.activePath == 'config' ? 'text-sky-600' : ''">
-                        <font-awesome-icon :icon="faGear" size="2x" class="hover:cursor-pointer w-1/5"
-                            :class="router.currentRoute.value.meta.activePath == 'config' ? 'text-sky-600' : ''" />
-                        <p class="w-4/5">
-                            Configurations
-                        </p>
-                    </router-link>
-                </li>
-                <li v-if="isCoordonateur(user?.roles)">
-                    <router-link :to="{ name: 'timetable-create' }"
-                        class="h-12 flex justify-center items-center border-b"
-                        :class="router.currentRoute.value.meta.activePath == 'timetables' ? 'text-sky-600' : ''">
-                        <font-awesome-icon :icon="faCalendarWeek" size="2x" class="hover:cursor-pointer w-1/5"
-                            :class="router.currentRoute.value.meta.activePath == 'timetables' ? 'text-sky-600' : ''" />
-                        <p class="w-4/5">
-                            Créer un emplois du temps
-                        </p>
-                    </router-link>
-                </li>
-
-            </ul>
-        </div>
+        </Transition>
+        <div v-if="isNavBar" class="w-1/5"></div>
         <div :class="isNavBar ? 'w-4/5' : 'w-full'">
             <!-- header -->
             <div class="h-12 bg-white mb-5 flex items-center">
@@ -85,4 +88,12 @@ const logout = () => {
 }
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+.slide-enter-from{
+    /* opacity: 0; */
+    transform: translateX(-50px);
+}
+.slide-enter-active{
+    transition: all 0.5s ease-out;
+}
+</style>
