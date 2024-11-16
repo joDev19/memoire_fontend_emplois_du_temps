@@ -1,12 +1,20 @@
 <template>
+    <Transition v-if="dataToShow?.status === 'created'" appear name="notif">
+        <div class="bg-orange-300 p-2 text-white font-bold text-lg rounded-lg mb-2">Vous n'avez pas encore partagé cet
+            emplois du temps à toutes les filières. Faite-le!</div>
+    </Transition>
+    <Transition v-if="dataToShow?.status === 'shared'" appear name="notif">
+        <div class="bg-sky-300 p-2 text-white font-bold text-lg rounded-lg mb-2">Vous avez déjà partagé cet
+            emplois du temps à toutes les filières!</div>
+    </Transition>
     <div class="flex justify-start gap-3 mb-2 h-12">
-        <!-- {{ filiere_id }} {{ week_id }} {{ year_id }} -->
         <select name="" v-model="filiere_id" id="">
 
             <option :value="null">Toutes les filieres</option>
             <option v-for="filiere in filieres" :key="filiere.id" :value="filiere.id">{{ filiere.label }}</option>
         </select>
-        <button class="p-2 rounded-lg bg-sky-600 text-white" @click="forward" v-if="isCoordonateur(user?.roles)">Partager</button>
+        <button class="p-2 rounded-lg bg-sky-600 text-white" @click="forward"
+            v-if="isCoordonateur(user?.roles)">Partager</button>
     </div>
 </template>
 
@@ -25,7 +33,7 @@ import { useUserStore } from '@/stores/utilisateur';
 import { isCoordonateur } from '@/helpers/helper';
 import router from '@/router';
 const userStore = useUserStore();
-const {user} = storeToRefs(userStore);
+const { user } = storeToRefs(userStore);
 
 const filieres = ref([])
 onMounted(() => {
@@ -54,9 +62,28 @@ const forward = () => {
     client.get(`api/timetables/forward/year/${year_id.value}/week/${week_id.value}/filiere/${filiere_id.value}`).then((response) => {
         // console.log(response.data)
         loading.value = false;
-        router.push({name: "dashboard"})
+        router.push({ name: "dashboard" })
     })
 }
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+.notif-enter-active {
+    animation-name: monAnimation;
+    animation-duration: 1.5s;
+}
+
+@keyframes monAnimation {
+    from {
+        opacity: 0;
+        position: relative;
+        bottom: 50px;
+    }
+
+    to {
+        opacity: 1;
+        position: relative;
+        bottom: 0px;
+    }
+}
+</style>

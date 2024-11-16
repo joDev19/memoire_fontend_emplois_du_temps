@@ -63,7 +63,7 @@ const { week_id, year_id } = storeToRefs(showTableTime)
 const { isShowingCalendar, dataToShow, events } = storeToRefs(tableTimeStore)
 const { url, rows: weeks, loading, createData } = storeToRefs(crudStore)
 
-url.value = 'api/courseWeeks'
+url.value = `api/courseWeeks/year/${year_id.value}`
 if (!year_id.value)
     router.push({ name: "dashboard" })
 

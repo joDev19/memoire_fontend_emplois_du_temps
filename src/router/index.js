@@ -288,20 +288,16 @@ const isAuthenticated = () => {
 }
 
 
-  router.beforeEach(async (to, from) => {
-    
-    if (useUserStore().user.id == undefined) {
-    isAuthenticated().then((response) => {
-      useUserStore().user = response.data
-      if (
-        // ❗️ Avoid an infinite redirect
-        to.name !== 'login'
-      ) {
-        // redirect the user to the login page
-        return { name: 'login' }
-      }
-    })
+router.beforeEach(async (to, from) => {
+  if (to.name !== "login") {
+    if (useUserStore().user.id === undefined) {
+      isAuthenticated().then((response) => {
+        useUserStore().user = response.data
+      }).catch(() => {
+        router.push({ name: 'login' })
+      })
+    }
   }
 
-  })
+})
 export default router

@@ -82,6 +82,7 @@ const { open, close } = useModal({
     },
 })
 const storeTimeTables = () => {
+    // console.log(year.value.id);
     if (events.value.length > 0) {
         const firstDayOfTheWeek = getFirstDayOfWeek(new Date(events.value[0].start))
         const lastDayOfTheWeek = new Date(firstDayOfTheWeek);
@@ -99,6 +100,7 @@ const storeTimeTables = () => {
         })
         const data_to_send = {
             courses: weekEvents,
+            year_id: year.value.id,
             weekStartDate: `${firstDayOfTheWeek.getFullYear()}-${dateFormatter(firstDayOfTheWeek.getMonth() + 1)}-${dateFormatter(firstDayOfTheWeek.getDate())}`,
             weekEndDate: `${lastDayOfTheWeek.getFullYear()}-${dateFormatter(lastDayOfTheWeek.getMonth() + 1)}-${dateFormatter(lastDayOfTheWeek.getDate())}`,
         }
